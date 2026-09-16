@@ -1,0 +1,10329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carafadiya Shop</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+
+    header {
+      background: #222;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .search {
+      margin: 15px;
+      padding: 12px;
+      width: calc(100% - 30px);
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 15px;
+    }
+
+    .product {
+      background: white;
+      padding: 12px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px #ccc;
+    }
+
+    .product img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      border: 0;
+      border-radius: 6px;
+      background: #222;
+      color: white;
+      cursor: pointer;
+    }
+
+    #cart {
+      background: white;
+      margin: 15px;
+      padding: 15px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Carafadiya Shop</h1>
+  <p>China Products → Africa</p>
+</header>
+
+<input
+  class="search"
+  id="search"
+  placeholder="Search products..."
+  oninput="searchProducts()"
+>
+
+<div class="products" id="products"></div>
+
+<div id="cart">
+  <h2>🛒 Cart</h2>
+  <p id="cartItems">Cart is empty</p>
+  <h3>Total: $<span id="total">0</span></h3>
+</div>
+
+<script>
+const products = [
+  {
+    name: "Smart Watch",
+    price: 20,
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30"
+  },
+  {
+    name: "Headphones",
+    price: 15,
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e"
+  },
+  {
+    name: "Sneakers",
+    price: 30,
+    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff"
+  },
+  {
+    name: "Backpack",
+    price: 18,
+    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62"
+  }
+];
+
+let cart = [];
+
+function showProducts(list = products) {
+  const box = document.getElementById("products");
+
+  box.innerHTML = list.map((product, index) => `
+    <div class="product">
+      <img src="${product.image}">
+      <h3>${product.name}</h3>
+      <p>$${product.price}</p>
+      <button onclick="addToCart(${index})">
+        Add to Cart
+      </button>
+    </div>
+  `).join("");
+}
+
+function addToCart(index) {
+  cart.push(products[index]);
+  updateCart();
+}
+
+function updateCart() {
+  const items = document.getElementById("cartItems");
+
+  if (cart.length === 0) {
+    items.innerHTML = "Cart is empty";
+  } else {
+    items.innerHTML = cart.map(item =>
+      `<p>${item.name} — $${item.price}</p>`
+    ).join("");
+  }
+
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  document.getElementById("total").textContent = total;
+}
+
+function searchProducts() {
+  const text = document
+    .getElementById("search")
+    .value
+    .toLowerCase();
+
+  const result = products.filter(product =>
+    product.name.toLowerCase().includes(text)
+  );
+
+  showProducts(result);
+}
+
+showProducts();
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carafadiya Shop</title>
+
+<style>
+body{margin:0;font-family:Arial;background:#f5f5f5}
+header{background:#222;color:white;padding:18px;text-align:center}
+.search{margin:15px;padding:12px;width:calc(100% - 30px);
+box-sizing:border-box;border:1px solid #ccc;border-radius:8px}
+.products{display:grid;grid-template-columns:repeat(2,1fr);
+gap:12px;padding:15px}
+.product{background:white;padding:10px;border-radius:10px;
+box-shadow:0 2px 5px #ccc}
+.product img{width:100%;height:130px;object-fit:cover;border-radius:8px}
+button{width:100%;padding:10px;margin-top:6px;border:0;
+border-radius:6px;background:#222;color:white}
+#cart,#login{background:white;margin:15px;padding:15px;border-radius:10px}
+.modal{display:none;position:fixed;inset:0;background:#0008;
+padding:30px}
+.modalBox{background:white;padding:20px;border-radius:12px;
+margin-top:50px}
+input{padding:12px;width:100%;box-sizing:border-box;
+margin:6px 0;border:1px solid #ccc;border-radius:6px}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Carafadiya Shop</h1>
+<p>China Products → Africa</p>
+</header>
+
+<div id="login">
+<h2>👤 Account</h2>
+<input id="username" placeholder="Your name">
+<button onclick="login()">Login</button>
+<p id="welcome"></p>
+</div>
+
+<input class="search" id="search"
+placeholder="🔍 Search products..."
+oninput="searchProducts()">
+
+<div class="products" id="products"></div>
+
+<div id="cart">
+<h2>🛒 Cart</h2>
+<div id="cartItems">Cart is empty</div>
+<h3>Total: $<span id="total">0</span></h3>
+<button onclick="order()">Order Now</button>
+</div>
+
+<div class="modal" id="modal">
+<div class="modalBox">
+<h2 id="detailName"></h2>
+<img id="detailImage" style="width:100%;border-radius:10px">
+<h3>$<span id="detailPrice"></span></h3>
+<p>Quality product from Carafadiya Shop.</p>
+<button onclick="closeDetails()">Close</button>
+</div>
+</div>
+
+<script>
+
+const products=[
+{
+name:"Smart Watch",
+price:20,
+image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30"
+},
+{
+name:"Headphones",
+price:15,
+image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e"
+},
+{
+name:"Sneakers",
+price:30,
+image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff"
+},
+{
+name:"Backpack",
+price:18,
+image:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62"
+}
+];
+
+let cart=[];
+
+function showProducts(list=products){
+
+document.getElementById("products").innerHTML=
+
+list.map((p,index)=>`
+
+<div class="product">
+
+<img src="${p.image}">
+
+<h3>${p.name}</h3>
+
+<p>$${p.price}</p>
+
+<button onclick="details(${index})">
+View Details
+</button>
+
+<button onclick="addToCart(${index})">
+Add to Cart
+</button>
+
+</div>
+
+`).join("");
+}
+
+function details(index){
+
+let p=products[index];
+
+document.getElementById("detailName").textContent=p.name;
+document.getElementById("detailPrice").textContent=p.price;
+document.getElementById("detailImage").src=p.image;
+
+document.getElementById("modal").style.display="block";
+}
+
+function closeDetails(){
+document.getElementById("modal").style.display="none";
+}
+
+function addToCart(index){
+
+cart.push(products[index]);
+
+updateCart();
+}
+
+function updateCart(){
+
+let items=document.getElementById("cartItems");
+
+if(cart.length===0){
+items.innerHTML="Cart is empty";
+}else{
+
+items.innerHTML=cart.map((p,i)=>`
+<p>
+${p.name} — $${p.price}
+<button onclick="removeItem(${i})">Remove</button>
+</p>
+`).join("");
+
+}
+
+let total=cart.reduce((sum,p)=>sum+p.price,0);
+
+document.getElementById("total").textContent=total;
+}
+
+function removeItem(index){
+
+cart.splice(index,1);
+
+updateCart();
+}
+
+function searchProducts(){
+
+let text=document
+.getElementById("search")
+.value
+.toLowerCase();
+
+let result=products.filter(p=>
+p.name.toLowerCase().includes(text)
+);
+
+showProducts(result);
+}
+
+function login(){
+
+let name=document.getElementById("username").value;
+
+if(name.trim()===""){
+alert("Please enter your name");
+return;
+}
+
+document.getElementById("welcome").textContent=
+"Welcome, "+name+"! 👋";
+}
+
+function order(){
+
+if(cart.length===0){
+
+alert("Your cart is empty.");
+
+}else{
+
+alert(
+"Order received! Total: $"+
+cart.reduce((sum,p)=>sum+p.price,0)
+);
+
+}
+
+}
+
+showProducts();
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carafadiya Shop</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f5f5f5;
+  color:#222;
+}
+header{
+  background:#222;
+  color:white;
+  padding:20px;
+  text-align:center;
+}
+nav{
+  display:flex;
+  gap:8px;
+  padding:12px;
+  overflow:auto;
+  background:white;
+}
+nav button{
+  width:auto;
+  margin:0;
+  white-space:nowrap;
+}
+.search{
+  margin:15px;
+  padding:13px;
+  width:calc(100% - 30px);
+  border:1px solid #ccc;
+  border-radius:8px;
+}
+.products{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  padding:15px;
+}
+.product{
+  background:white;
+  padding:10px;
+  border-radius:10px;
+  box-shadow:0 2px 5px #ccc;
+}
+.product img{
+  width:100%;
+  height:130px;
+  object-fit:cover;
+  border-radius:8px;
+}
+.product h3{
+  margin:8px 0 4px;
+}
+.seller{
+  color:#666;
+  font-size:13px;
+}
+button{
+  padding:10px;
+  margin-top:6px;
+  border:0;
+  border-radius:7px;
+  background:#222;
+  color:white;
+  cursor:pointer;
+}
+.full{
+  width:100%;
+}
+section{
+  background:white;
+  margin:15px;
+  padding:15px;
+  border-radius:10px;
+}
+.cart-item{
+  border-bottom:1px solid #ddd;
+  padding:10px 0;
+}
+.qty button{
+  width:auto;
+  padding:6px 10px;
+}
+input{
+  padding:12px;
+  width:100%;
+  border:1px solid #ccc;
+  border-radius:7px;
+  margin:5px 0;
+}
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#0008;
+  padding:25px;
+  z-index:10;
+}
+.modal-box{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  margin-top:40px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Carafadiya Shop</h1>
+  <p>China Products → Africa</p>
+</header>
+
+<nav>
+  <button onclick="filterCategory('All')">All</button>
+  <button onclick="filterCategory('Electronics')">Electronics</button>
+  <button onclick="filterCategory('Fashion')">Fashion</button>
+  <button onclick="filterCategory('Bags')">Bags</button>
+</nav>
+
+<input
+  class="search"
+  id="search"
+  placeholder="🔍 Search products..."
+  oninput="searchProducts()"
+>
+
+<div class="products" id="products"></div>
+
+<section>
+  <h2>🛒 Shopping Cart</h2>
+  <div id="cartItems">Cart is empty</div>
+
+  <h3>
+    Total: $<span id="total">0</span>
+  </h3>
+
+  <button class="full" onclick="openCheckout()">
+    Checkout
+  </button>
+</section>
+
+<section>
+  <h2>📦 Order History</h2>
+  <div id="orders">
+    No orders yet.
+  </div>
+</section>
+
+<div class="modal" id="checkoutModal">
+
+  <div class="modal-box">
+
+    <h2>Checkout</h2>
+
+    <input id="customerName" placeholder="Your name">
+
+    <input id="phone" placeholder="Phone number">
+
+    <input id="address" placeholder="Delivery address">
+
+    <button class="full" onclick="placeOrder()">
+      Place Order
+    </button>
+
+    <button
+      class="full"
+      onclick="closeCheckout()"
+    >
+      Cancel
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+
+const products = [
+
+  {
+    name:"Smart Watch",
+    price:20,
+    category:"Electronics",
+    seller:"China Tech",
+    image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30"
+  },
+
+  {
+    name:"Headphones",
+    price:15,
+    category:"Electronics",
+    seller:"Audio Store",
+    image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e"
+  },
+
+  {
+    name:"Sneakers",
+    price:30,
+    category:"Fashion",
+    seller:"Fashion China",
+    image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff"
+  },
+
+  {
+    name:"Backpack",
+    price:18,
+    category:"Bags",
+    seller:"Bag Factory",
+    image:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62"
+  }
+
+];
+
+let cart = [];
+let orders = [];
+
+function showProducts(list=products){
+
+  const box = document.getElementById("products");
+
+  box.innerHTML = list.map((p,index)=>`
+
+    <div class="product">
+
+      <img src="${p.image}">
+
+      <h3>${p.name}</h3>
+
+      <p><b>$${p.price}</b></p>
+
+      <p class="seller">
+        Seller: ${p.seller}
+      </p>
+
+      <button
+        class="full"
+        onclick="addToCart(${products.indexOf(p)})"
+      >
+        Add to Cart
+      </button>
+
+    </div>
+
+  `).join("");
+}
+
+function addToCart(index){
+
+  const existing =
+    cart.find(item=>item.index===index);
+
+  if(existing){
+
+    existing.quantity++;
+
+  }else{
+
+    cart.push({
+      index:index,
+      quantity:1
+    });
+
+  }
+
+  updateCart();
+}
+
+function updateCart(){
+
+  const box =
+    document.getElementById("cartItems");
+
+  if(cart.length===0){
+
+    box.innerHTML="Cart is empty";
+
+  }else{
+
+    box.innerHTML=cart.map((item,i)=>{
+
+      const p=products[item.index];
+
+      return `
+
+        <div class="cart-item">
+
+          <b>${p.name}</b>
+
+          <p>$${p.price} × ${item.quantity}</p>
+
+          <div class="qty">
+
+            <button onclick="changeQty(${i},-1)">
+              −
+            </button>
+
+            <span> ${item.quantity} </span>
+
+            <button onclick="changeQty(${i},1)">
+              +
+            </button>
+
+            <button onclick="removeItem(${i})">
+              Remove
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+  }
+
+  let total=cart.reduce(
+
+    (sum,item)=>
+      sum + products[item.index].price * item.quantity,
+
+    0
+
+  );
+
+  document.getElementById("total").textContent=total;
+}
+
+function changeQty(cartIndex,change){
+
+  cart[cartIndex].quantity += change;
+
+  if(cart[cartIndex].quantity<=0){
+
+    cart.splice(cartIndex,1);
+
+  }
+
+  updateCart();
+}
+
+function removeItem(index){
+
+  cart.splice(index,1);
+
+  updateCart();
+}
+
+function searchProducts(){
+
+  const text =
+    document.getElementById("search")
+    .value
+    .toLowerCase();
+
+  const result=products.filter(p=>
+
+    p.name.toLowerCase().includes(text) ||
+
+    p.category.toLowerCase().includes(text) ||
+
+    p.seller.toLowerCase().includes(text)
+
+  );
+
+  showProducts(result);
+}
+
+function filterCategory(category){
+
+  if(category==="All"){
+
+    showProducts(products);
+
+  }else{
+
+    showProducts(
+
+      products.filter(
+        p=>p.category===category
+      )
+
+    );
+
+  }
+
+}
+
+function openCheckout(){
+
+  if(cart.length===0){
+
+    alert("Your cart is empty.");
+
+    return;
+  }
+
+  document.getElementById(
+    "checkoutModal"
+  ).style.display="block";
+}
+
+function closeCheckout(){
+
+  document.getElementById(
+    "checkoutModal"
+  ).style.display="none";
+}
+
+function placeOrder(){
+
+  const name =
+    document.getElementById("customerName").value;
+
+  const phone =
+    document.getElementById("phone").value;
+
+  const address =
+    document.getElementById("address").value;
+
+  if(!name || !phone || !address){
+
+    alert("Please fill all information.");
+
+    return;
+  }
+
+  const total =
+    cart.reduce(
+
+      (sum,item)=>
+        sum +
+        products[item.index].price *
+        item.quantity,
+
+      0
+
+    );
+
+  const order={
+
+    name:name,
+    phone:phone,
+    address:address,
+    total:total,
+    date:new Date().toLocaleString()
+
+  };
+
+  orders.push(order);
+
+  showOrders();
+
+  cart=[];
+
+  updateCart();
+
+  closeCheckout();
+
+  alert("Order placed successfully! 🎉");
+}
+
+function showOrders(){
+
+  const box =
+    document.getElementById("orders");
+
+  if(orders.length===0){
+
+    box.innerHTML="No orders yet.";
+
+    return;
+  }
+
+  box.innerHTML=orders.map((order,i)=>`
+
+    <div class="cart-item">
+
+      <b>Order #${i+1}</b>
+
+      <p>Total: $${order.total}</p>
+
+      <p>Customer: ${order.name}</p>
+
+      <p>Date: ${order.date}</p>
+
+    </div>
+
+  `).join("");
+}<div class="analytics">
+
+  <h2>📊 Seller Analytics</h2>
+
+  <div class="stats">
+
+    <div>
+      <h3>💰 Revenue</h3>
+      <strong id="analyticsRevenue">$0</strong>
+    </div>
+
+    <div>
+      <h3>📦 Orders</h3>
+      <strong id="analyticsOrders">0</strong>
+    </div>
+
+    <div>
+      <h3>🛍️ Units Sold</h3>
+      <strong id="analyticsUnits">0</strong>
+    </div>
+
+  </div>
+
+  <h3>🏆 Best Selling Products</h3>
+
+  <div id="bestProducts">
+    Loading...
+  </div>
+
+</div>async function loadSellerAnalytics(sellerId) {
+
+  const {async function loadSellerAnalytics(sellerId) {
+
+  const {<div class="analytics">
+
+  <h2>📊 Seller Analytics</h2>
+
+  <div class="stats">
+
+    <div>
+      <h3>💰 Revenue</h3>
+      <strong id="analyticsRevenue">$0</strong>
+    </div>
+
+    <div>
+      <h3>📦 Orders</h3>
+      <strong id="analyticsOrders">0</strong>
+    </div>
+
+    <div>
+      <h3>🛍️ Units Sold</h3>
+      <strong id="analyticsUnits">0</strong>
+    </div>
+
+  </div>
+
+  <h3>🏆 Best Selling Products</h3>
+
+  <div id="bestProducts">
+    Loading...
+  </div>
+
+</div><div class="analytics">
+
+  <h2>📊 Seller Analytics</h2>
+
+  <div class="stats">
+
+    <div>
+      <h3>💰 Revenue</h3>
+      <strong id="analyticsRevenue">$0</strong>
+    </div>
+
+    <div>
+      <h3>📦 Orders</h3>
+      <strong id="analyticsOrders">0</strong>
+    </div>
+
+    <div>
+      <h3>🛍️ Units Sold</h3>
+      <strong id="analyticsUnits">0</strong>
+    </div>
+
+  </div>
+
+  <h3>🏆 Best Selling Products</h3>
+
+  <div id="bestProducts">
+    Loading...
+  </div>
+
+</div><div class="analytics">
+
+  <h2>📊 Seller Analytics</h2>
+
+  <div class="stats">
+
+    <div>
+      <h3>💰 Revenue</h3>
+      <strong id="analyticsRevenue">$0</strong>
+    </div>
+
+    <div>
+      <h3>📦 Orders</h3>
+      <strong id="analyticsOrders">0</strong>
+    </div>
+
+    <div>
+      <h3>🛍️ Units Sold</h3>
+      <strong id="analyticsUnits">0</strong>
+    </div>
+
+  </div>
+
+  <h3>🏆 Best Selling Products</h3>
+
+  <div id="bestProducts">
+    Loading...
+  </div>
+
+</div><div class="analytics">
+
+  <h2>📊 Seller Analytics</h2>
+
+  <div class="stats">
+
+    <div>
+      <h3>💰 Revenue</h3>
+      <strong id="analyticsRevenue">$0</strong>
+    </div>
+
+    <div>
+      <h3>📦 Orders</h3>
+      <strong id="analyticsOrders">0</strong>
+    </div>
+
+    <div>
+      <h3>🛍️ Units Sold</h3>
+      <strong id="analyticsUnits">0</strong>
+    </div>
+
+  </div>
+
+  <h3>🏆 Best Selling Products</h3>
+
+  <div id="bestProducts">
+    Loading...
+  </div>
+
+</div>async function loadSellerAnalytics(sellerId) {
+
+  const { data: orders, error } = await db
+    .from("orders")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  let revenue = 0;
+  let units = 0;
+  let orderCount = 0;
+
+  const productSales = {};
+
+  orders.forEach(order => {
+
+    const items = Array.isArray(order.items)
+      ? order.items
+      : [];
+
+    let sellerOrder = false;
+
+    items.forEach(item => {
+
+      if (item.seller_id != sellerId) return;
+
+      sellerOrder = true;
+
+      const quantity =
+        Number(item.quantity || 1);
+
+      const price =
+        Number(item.price || 0);
+
+      revenue += quantity * price;
+      units += quantity;
+
+      productSales[item.name] =
+        (productSales[item.name] || 0) + quantity;
+
+    });
+
+    if (sellerOrder) {
+      orderCount++;
+    }
+
+  });
+
+  document.getElementById(
+    "analyticsRevenue"
+  ).textContent =
+    "$" + revenue.toFixed(2);
+
+  document.getElementById(
+    "analyticsOrders"
+  ).textContent =
+    orderCount;
+
+  document.getElementById(
+    "analyticsUnits"
+  ).textContent =
+    units;
+
+  showBestProducts(productSales);
+}
+
+showProducts();
+
+updateCart();
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carafadiya Shop</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f5f5f5;
+  color:#222;
+}
+header{
+  background:#222;
+  color:white;
+  padding:20px;
+  text-align:center;
+}
+nav{
+  display:flex;
+  gap:8px;
+  padding:12px;
+  overflow:auto;
+  background:white;
+}
+nav button{
+  width:auto;
+  margin:0;
+  white-space:nowrap;
+}
+.search{
+  margin:15px;
+  padding:13px;
+  width:calc(100% - 30px);
+  border:1px solid #ccc;
+  border-radius:8px;
+}
+.products{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  padding:15px;
+}
+.product{
+  background:white;
+  padding:10px;
+  border-radius:10px;
+  box-shadow:0 2px 5px #ccc;
+}
+.product img{
+  width:100%;
+  height:130px;
+  object-fit:cover;
+  border-radius:8px;
+}
+.product h3{
+  margin:8px 0 4px;
+}
+.seller{
+  color:#666;
+  font-size:13px;
+}
+button{
+  padding:10px;
+  margin-top:6px;
+  border:0;
+  border-radius:7px;
+  background:#222;
+  color:white;
+  cursor:pointer;
+}
+.full{
+  width:100%;
+}
+section{
+  background:white;
+  margin:15px;
+  padding:15px;
+  border-radius:10px;
+}
+.cart-item{
+  border-bottom:1px solid #ddd;
+  padding:10px 0;
+}
+.qty button{
+  width:auto;
+  padding:6px 10px;
+}
+input{
+  padding:12px;
+  width:100%;
+  border:1px solid #ccc;
+  border-radius:7px;
+  margin:5px 0;
+}
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#0008;
+  padding:25px;
+  z-index:10;
+}
+.modal-box{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  margin-top:40px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Carafadiya Shop</h1>
+  <p>China Products → Africa</p>
+</header>
+
+<nav>
+  <button onclick="filterCategory('All')">All</button>
+  <button onclick="filterCategory('Electronics')">Electronics</button>
+  <button onclick="filterCategory('Fashion')">Fashion</button>
+  <button onclick="filterCategory('Bags')">Bags</button>
+</nav>
+
+<input
+  class="search"
+  id="search"
+  placeholder="🔍 Search products..."
+  oninput="searchProducts()"
+>
+
+<div class="products" id="products"></div>
+
+<section>
+  <h2>🛒 Shopping Cart</h2>
+  <div id="cartItems">Cart is empty</div>
+
+  <h3>
+    Total: $<span id="total">0</span>
+  </h3>
+
+  <button class="full" onclick="openCheckout()">
+    Checkout
+  </button>
+</section>
+
+<section>
+  <h2>📦 Order History</h2>
+  <div id="orders">
+    No orders yet.
+  </div>
+</section>
+
+<div class="modal" id="checkoutModal">
+
+  <div class="modal-box">
+
+    <h2>Checkout</h2>
+
+    <input id="customerName" placeholder="Your name">
+
+    <input id="phone" placeholder="Phone number">
+
+    <input id="address" placeholder="Delivery address">
+
+    <button class="full" onclick="placeOrder()">
+      Place Order
+    </button>
+
+    <button
+      class="full"
+      onclick="closeCheckout()"
+    >
+      Cancel
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+
+const products = [
+
+  {
+    name:"Smart Watch",
+    price:20,
+    category:"Electronics",
+    seller:"China Tech",
+    image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30"
+  },
+
+  {
+    name:"Headphones",
+    price:15,
+    category:"Electronics",
+    seller:"Audio Store",
+    image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e"
+  },
+
+  {
+    name:"Sneakers",
+    price:30,
+    category:"Fashion",
+    seller:"Fashion China",
+    image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff"
+  },
+
+  {
+    name:"Backpack",
+    price:18,
+    category:"Bags",
+    seller:"Bag Factory",
+    image:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62"
+  }
+
+];
+
+let cart = [];
+let orders = [];
+
+function showProducts(list=products){
+
+  const box = document.getElementById("products");
+
+  box.innerHTML = list.map((p,index)=>`
+
+    <div class="product">
+
+      <img src="${p.image}">
+
+      <h3>${p.name}</h3>
+
+      <p><b>$${p.price}</b></p>
+
+      <p class="seller">
+        Seller: ${p.seller}
+      </p>
+
+      <button
+        class="full"
+        onclick="addToCart(${products.indexOf(p)})"
+      >
+        Add to Cart
+      </button>
+
+    </div>
+
+  `).join("");
+}
+
+function addToCart(index){
+
+  const existing =
+    cart.find(item=>item.index===index);
+
+  if(existing){
+
+    existing.quantity++;
+
+  }else{
+
+    cart.push({
+      index:index,
+      quantity:1
+    });
+
+  }
+
+  updateCart();
+}
+
+function updateCart(){
+
+  const box =
+    document.getElementById("cartItems");
+
+  if(cart.length===0){
+
+    box.innerHTML="Cart is empty";
+
+  }else{
+
+    box.innerHTML=cart.map((item,i)=>{
+
+      const p=products[item.index];
+
+      return `
+
+        <div class="cart-item">
+
+          <b>${p.name}</b>
+
+          <p>$${p.price} × ${item.quantity}</p>
+
+          <div class="qty">
+
+            <button onclick="changeQty(${i},-1)">
+              −
+            </button>
+
+            <span> ${item.quantity} </span>
+
+            <button onclick="changeQty(${i},1)">
+              +
+            </button>
+
+            <button onclick="removeItem(${i})">
+              Remove
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+  }
+
+  let total=cart.reduce(
+
+    (sum,item)=>
+      sum + products[item.index].price * item.quantity,
+
+    0
+
+  );
+
+  document.getElementById("total").textContent=total;
+}
+
+function changeQty(cartIndex,change){
+
+  cart[cartIndex].quantity += change;
+
+  if(cart[cartIndex].quantity<=0){
+
+    cart.splice(cartIndex,1);
+
+  }
+
+  updateCart();
+}
+
+function removeItem(index){
+
+  cart.splice(index,1);
+
+  updateCart();
+}
+
+function searchProducts(){
+
+  const text =
+    document.getElementById("search")
+    .value
+    .toLowerCase();
+
+  const result=products.filter(p=>
+
+    p.name.toLowerCase().includes(text) ||
+
+    p.category.toLowerCase().includes(text) ||
+
+    p.seller.toLowerCase().includes(text)
+
+  );
+
+  showProducts(result);
+}
+
+function filterCategory(category){
+
+  if(category==="All"){
+
+    showProducts(products);
+
+  }else{
+
+    showProducts(
+
+      products.filter(
+        p=>p.category===category
+      )
+
+    );
+
+  }
+
+}
+
+function openCheckout(){
+
+  if(cart.length===0){
+
+    alert("Your cart is empty.");
+
+    return;
+  }
+
+  document.getElementById(
+    "checkoutModal"
+  ).style.display="block";
+}
+
+function closeCheckout(){
+
+  document.getElementById(
+    "checkoutModal"
+  ).style.display="none";
+}
+
+function placeOrder(){
+
+  const name =
+    document.getElementById("customerName").value;
+
+  const phone =
+    document.getElementById("phone").value;
+
+  const address =
+    document.getElementById("address").value;
+
+  if(!name || !phone || !address){
+
+    alert("Please fill all information.");
+
+    return;
+  }
+
+  const total =
+    cart.reduce(
+
+      (sum,item)=>
+        sum +
+        products[item.index].price *
+        item.quantity,
+
+      0
+
+    );
+
+  const order={
+
+    name:name,
+    phone:phone,
+    address:address,
+    total:total,
+    date:new Date().toLocaleString()
+
+  };
+
+  orders.push(order);
+
+  showOrders();
+
+  cart=[];
+
+  updateCart();
+
+  closeCheckout();
+
+  alert("Order placed successfully! 🎉");
+}
+
+function showOrders(){
+
+  const box =
+    document.getElementById("orders");
+
+  if(orders.length===0){
+
+    box.innerHTML="No orders yet.";
+
+    return;
+  }
+
+  box.innerHTML=orders.map((order,i)=>`
+
+    <div class="cart-item">
+
+      <b>Order #${i+1}</b>
+
+      <p>Total: $${order.total}</p>
+
+      <p>Customer: ${order.name}</p>
+
+      <p>Date: ${order.date}</p>
+
+    </div>
+
+  `).join("");
+}
+
+showProducts();
+
+updateCart();
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carafadiya Shop</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f5f5f5;
+  color:#222;
+}
+header{
+  background:#222;
+  color:white;
+  padding:20px;
+  text-align:center;
+}
+nav{
+  display:flex;
+  gap:8px;
+  padding:12px;
+  overflow:auto;
+  background:white;
+}
+nav button{
+  width:auto;
+  margin:0;
+  white-space:nowrap;
+}
+.search{
+  margin:15px;
+  padding:13px;
+  width:calc(100% - 30px);
+  border:1px solid #ccc;
+  border-radius:8px;
+}
+.products{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  padding:15px;
+}
+.product{
+  background:white;
+  padding:10px;
+  border-radius:10px;
+  box-shadow:0 2px 5px #ccc;
+}
+.product img{
+  width:100%;
+  height:130px;
+  object-fit:cover;
+  border-radius:8px;
+}
+.product h3{
+  margin:8px 0 4px;
+}
+.seller{
+  color:#666;
+  font-size:13px;
+}
+button{
+  padding:10px;
+  margin-top:6px;
+  border:0;
+  border-radius:7px;
+  background:#222;
+  color:white;
+  cursor:pointer;
+}
+.full{
+  width:100%;
+}
+section{
+  background:white;
+  margin:15px;
+  padding:15px;
+  border-radius:10px;
+}
+.cart-item{
+  border-bottom:1px solid #ddd;
+  padding:10px 0;
+}
+.qty button{
+  width:auto;
+  padding:6px 10px;
+}
+input{
+  padding:12px;
+  width:100%;
+  border:1px solid #ccc;
+  border-radius:7px;
+  margin:5px 0;
+}
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#0008;
+  padding:25px;
+  z-index:10;
+}
+.modal-box{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  margin-top:40px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Carafadiya Shop</h1>
+  <p>China Products → Africa</p>
+</header>
+
+<nav>
+  <button onclick="filterCategory('All')">All</button>
+  <button onclick="filterCategory('Electronics')">Electronics</button>
+  <button onclick="filterCategory('Fashion')">Fashion</button>
+  <button onclick="filterCategory('Bags')">Bags</button>
+</nav>
+
+<input
+  class="search"
+  id="search"
+  placeholder="🔍 Search products..."
+  oninput="searchProducts()"
+>
+
+<div class="products" id="products"></div>
+
+<section>
+  <h2>🛒 Shopping Cart</h2>
+  <div id="cartItems">Cart is empty</div>
+
+  <h3>
+    Total: $<span id="total">0</span>
+  </h3>
+
+  <button class="full" onclick="openCheckout()">
+    Checkout
+  </button>
+</section>
+
+<section>
+  <h2>📦 Order History</h2>
+  <div id="orders">
+    No orders yet.
+  </div>
+</section>
+
+<div class="modal" id="checkoutModal">
+
+  <div class="modal-box">
+
+    <h2>Checkout</h2>
+
+    <input id="customerName" placeholder="Your name">
+
+    <input id="phone" placeholder="Phone number">
+
+    <input id="address" placeholder="Delivery address">
+
+    <button class="full" onclick="placeOrder()">
+      Place Order
+    </button>
+
+    <button
+      class="full"
+      onclick="closeCheckout()"
+    >
+      Cancel
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+
+const products = [
+
+  {
+    name:"Smart Watch",
+    price:20,
+    category:"Electronics",
+    seller:"China Tech",
+    image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30"
+  },
+
+  {
+    name:"Headphones",
+    price:15,
+    category:"Electronics",
+    seller:"Audio Store",
+    image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e"
+  },
+
+  {
+    name:"Sneakers",
+    price:30,
+    category:"Fashion",
+    seller:"Fashion China",
+    image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff"
+  },
+
+  {
+    name:"Backpack",
+    price:18,
+    category:"Bags",
+    seller:"Bag Factory",
+    image:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62"
+  }
+
+];
+
+let cart = [];
+let orders = [];
+
+function showProducts(list=products){
+
+  const box = document.getElementById("products");
+
+  box.innerHTML = list.map((p,index)=>`
+
+    <div class="product">
+
+      <img src="${p.image}">
+
+      <h3>${p.name}</h3>
+
+      <p><b>$${p.price}</b></p>
+
+      <p class="seller">
+        Seller: ${p.seller}
+      </p>
+
+      <button
+        class="full"
+        onclick="addToCart(${products.indexOf(p)})"
+      >
+        Add to Cart
+      </button>
+
+    </div>
+
+  `).join("");
+}
+
+function addToCart(index){
+
+  const existing =
+    cart.find(item=>item.index===index);
+
+  if(existing){
+
+    existing.quantity++;
+
+  }else{
+
+    cart.push({
+      index:index,
+      quantity:1
+    });
+
+  }
+
+  updateCart();
+}
+
+function updateCart(){
+
+  const box =
+    document.getElementById("cartItems");
+
+  if(cart.length===0){
+
+    box.innerHTML="Cart is empty";
+
+  }else{
+
+    box.innerHTML=cart.map((item,i)=>{
+
+      const p=products[item.index];
+
+      return `
+
+        <div class="cart-item">
+
+          <b>${p.name}</b>
+
+          <p>$${p.price} × ${item.quantity}</p>
+
+          <div class="qty">
+
+            <button onclick="changeQty(${i},-1)">
+              −
+            </button>
+
+            <span> ${item.quantity} </span>
+
+            <button onclick="changeQty(${i},1)">
+              +
+            </button>
+
+            <button onclick="removeItem(${i})">
+              Remove
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+  }
+
+  let total=cart.reduce(
+
+    (sum,item)=>
+      sum + products[item.index].price * item.quantity,
+
+    0
+
+  );
+
+  document.getElementById("total").textContent=total;
+}
+
+function changeQty(cartIndex,change){
+
+  cart[cartIndex].quantity += change;
+
+  if(cart[cartIndex].quantity<=0){
+
+    cart.splice(cartIndex,1);
+
+  }
+
+  updateCart();
+}
+
+function removeItem(index){
+
+  cart.splice(index,1);
+
+  updateCart();
+}
+
+function searchProducts(){
+
+  const text =
+    document.getElementById("search")
+    .value
+    .toLowerCase();
+
+  const result=products.filter(p=>
+
+    p.name.toLowerCase().includes(text) ||
+
+    p.category.toLowerCase().includes(text) ||
+
+    p.seller.toLowerCase().includes(text)
+
+  );
+
+  showProducts(result);
+}
+
+function filterCategory(category){
+
+  if(category==="All"){
+
+    showProducts(products);
+
+  }else{
+
+    showProducts(
+
+      products.filter(
+        p=>p.category===category
+      )
+
+    );
+
+  }
+
+}
+
+function openCheckout(){
+
+  if(cart.length===0){
+
+    alert("Your cart is empty.");
+
+    return;
+  }
+
+  document.getElementById(
+    "checkoutModal"
+  ).style.display="block";
+}
+
+function closeCheckout(){
+
+  document.getElementById(
+    "checkoutModal"
+  ).style.display="none";
+}
+
+function placeOrder(){
+
+  const name =
+    document.getElementById("customerName").value;
+
+  const phone =
+    document.getElementById("phone").value;
+
+  const address =
+    document.getElementById("address").value;
+
+  if(!name || !phone || !address){
+
+    alert("Please fill all information.");
+
+    return;
+  }
+
+  const total =
+    cart.reduce(
+
+      (sum,item)=>
+        sum +
+        products[item.index].price *
+        item.quantity,
+
+      0
+
+    );
+
+  const order={
+
+    name:name,
+    phone:phone,
+    address:address,
+    total:total,
+    date:new Date().toLocaleString()
+
+  };
+
+  orders.push(order);
+
+  showOrders();
+
+  cart=[];
+
+  updateCart();
+
+  closeCheckout();
+
+  alert("Order placed successfully! 🎉");
+}
+
+function showOrders(){
+
+  const box =
+    document.getElementById("orders");
+
+  if(orders.length===0){
+
+    box.innerHTML="No orders yet.";
+
+    return;
+  }
+
+  box.innerHTML=orders.map((order,i)=>`
+
+    <div class="cart-item">
+
+      <b>Order #${i+1}</b>
+
+      <p>Total: $${order.total}</p>
+
+      <p>Customer: ${order.name}</p>
+
+      <p>Date: ${order.date}</p>
+
+    </div>
+
+  `).join("");
+}
+
+showProducts();
+
+updateCart();
+
+</script>
+
+</body>
+</html>create table products (
+  id bigint generated always as identity primary key,
+  name text not null,
+  price numeric not null,
+  category text,
+  seller text,
+  image text,
+  created_at timestamp default now()
+);
+
+create table orders (
+  id bigint generated always as identity primary key,
+  customer_name text not null,
+  phone text not null,
+  address text not null,
+  total numeric not null,
+  created_at timestamp default now()
+);
+
+insert into products
+(name, price, category, seller, image)
+values
+(
+  'Smart Watch',
+  20,
+  'Electronics',
+  'China Tech',
+  'https://images.unsplash.com/photo-1523275335684-37898b6baf30'
+),
+(
+  'Headphones',
+  15,
+  'Electronics',
+  'Audio Store',
+  'https://images.unsplash.com/photo-1505740420928-5e560c06d30e'
+),
+(
+  'Sneakers',
+  30,
+  'Fashion',
+  'Fashion China',
+  'https://images.unsplash.com/photo-1542291026-7eec264c27ff'
+),
+(
+  'Backpack',
+  18,
+  'Bags',
+  'Bag Factory',
+  'https://images.unsplash.com/photo-1553062407-98eeb64c6a62'
+);const SUPABASE_URL = "GELI_PROJECT_URL_HALKAN";
+const SUPABASE_KEY = "GELI_PUBLISHABLE_KEY_HALKAN";<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carafadiya Shop</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+
+    header {
+      background: #222;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .search {
+      margin: 15px;
+      padding: 13px;
+      width: calc(100% - 30px);
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 15px;
+    }
+
+    .product {
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px #ccc;
+    }
+
+    .product img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 7px;
+      border: 0;
+      border-radius: 7px;
+      background: #222;
+      color: white;
+    }
+
+    section {
+      background: white;
+      margin: 15px;
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    .cart-item {
+      padding: 10px 0;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .message {
+      text-align: center;
+      padding: 30px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Carafadiya Shop</h1>
+  <p>China Products → Africa</p>
+</header>
+
+<input
+  id="search"
+  class="search"
+  placeholder="🔍 Search products..."
+  oninput="searchProducts()"
+>
+
+<div id="products" class="products">
+  <div class="message">Loading products...</div>
+</div>
+
+<section>
+  <h2>🛒 Cart</h2>
+
+  <div id="cartItems">
+    Cart is empty
+  </div>
+
+  <h3>
+    Total: $<span id="total">0</span>
+  </h3>
+
+  <button onclick="placeOrder()">
+    Place Order
+  </button>
+</section>
+
+<script>
+
+/* =========================
+   1. SUPABASE SETTINGS
+   ========================= */
+
+const SUPABASE_URL =
+  "GELI_PROJECT_URL_HALKAN";
+
+const SUPABASE_KEY =
+  "GELI_PUBLISHABLE_KEY_HALKAN";
+
+const supabaseClient =
+  supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+/* =========================
+   2. APP DATA
+   ========================= */
+
+let products = [];
+let cart = [];
+
+
+/* =========================
+   3. LOAD PRODUCTS
+   ========================= */
+
+async function loadProducts() {
+
+  const { data, error } =
+    await supabaseClient
+      .from("products")
+      .select("*")
+      .order("id", { ascending: false });
+
+  if (error) {
+
+    console.error(error);
+
+    document.getElementById("products").innerHTML =
+      `<div class="message">
+        ❌ Could not load products.
+        <br><br>
+        Check your Supabase URL, key and database policies.
+      </div>`;
+
+    return;
+  }
+
+  products = data || [];
+
+  showProducts(products);
+}
+
+
+/* =========================
+   4. SHOW PRODUCTS
+   ========================= */
+
+function showProducts(list) {
+
+  const box =
+    document.getElementById("products");
+
+  if (list.length === 0) {
+
+    box.innerHTML =
+      `<div class="message">
+        No products found.
+      </div>`;
+
+    return;
+  }
+
+  box.innerHTML =
+    list.map(product => `
+
+      <div class="product">
+
+        <img
+          src="${product.image || 'https://via.placeholder.com/300'}"
+          alt="${product.name}"
+        >
+
+        <h3>${product.name}</h3>
+
+        <p>
+          <b>$${product.price}</b>
+        </p>
+
+        <p>
+          🏪 ${product.seller || "Unknown seller"}
+        </p>
+
+        <p>
+          📂 ${product.category || "Other"}
+        </p>
+
+        <button
+          onclick="addToCart(${product.id})"
+        >
+          Add to Cart
+        </button>
+
+      </div>
+
+    `).join("");
+}
+
+
+/* =========================
+   5. ADD TO CART
+   ========================= */
+
+function addToCart(productId) {
+
+  const product =
+    products.find(p => p.id === productId);
+
+  if (!product) return;
+
+  const existing =
+    cart.find(item => item.product.id === productId);
+
+  if (existing) {
+
+    existing.quantity++;
+
+  } else {
+
+    cart.push({
+      product: product,
+      quantity: 1
+    });
+
+  }
+
+  updateCart();
+}
+
+
+/* =========================
+   6. UPDATE CART
+   ========================= */
+
+function updateCart() {
+
+  const box =
+    document.getElementById("cartItems");
+
+  if (cart.length === 0) {
+
+    box.innerHTML = "Cart is empty";
+
+  } else {
+
+    box.innerHTML =
+      cart.map((item, index) => `
+
+        <div class="cart-item">
+
+          <b>${item.product.name}</b>
+
+          <p>
+            $${item.product.price}
+            × ${item.quantity}
+          </p>
+
+          <button
+            onclick="removeItem(${index})"
+          >
+            Remove
+          </button>
+
+        </div>
+
+      `).join("");
+  }
+
+  const total =
+    cart.reduce(
+      (sum, item) =>
+        sum +
+        Number(item.product.price) *
+        item.quantity,
+      0
+    );
+
+  document.getElementById("total")
+    .textContent = total.toFixed(2);
+}
+
+
+/* =========================
+   7. REMOVE ITEM
+   ========================= */
+
+function removeItem(index) {
+
+  cart.splice(index, 1);
+
+  updateCart();
+}
+
+
+/* =========================
+   8. SEARCH
+   ========================= */
+
+function searchProducts() {
+
+  const text =
+    document
+      .getElementById("search")
+      .value
+      .toLowerCase();
+
+  const result =
+    products.filter(product =>
+
+      product.name
+        .toLowerCase()
+        .includes(text)
+
+      ||
+
+      (product.category || "")
+        .toLowerCase()
+        .includes(text)
+
+      ||
+
+      (product.seller || "")
+        .toLowerCase()
+        .includes(text)
+
+    );
+
+  showProducts(result);
+}
+
+
+/* =========================
+   9. PLACE ORDER
+   ========================= */
+
+async function placeOrder() {
+
+  if (cart.length === 0) {
+
+    alert("Your cart is empty.");
+
+    return;
+  }
+
+  const customerName =
+    prompt("Enter your name:");
+
+  if (!customerName) return;
+
+  const phone =
+    prompt("Enter your phone number:");
+
+  if (!phone) return;
+
+  const address =
+    prompt("Enter delivery address:");
+
+  if (!address) return;
+
+  const total =
+    cart.reduce(
+      (sum, item) =>
+        sum +
+        Number(item.product.price) *
+        item.quantity,
+      0
+    );
+
+  const { error } =
+    await supabaseClient
+      .from("orders")
+      .insert({
+
+        customer_name: customerName,
+
+        phone: phone,
+
+        address: address,
+
+        total: total
+
+      });
+
+  if (error) {
+
+    console.error(error);
+
+    alert(
+      "Order failed. Check your Supabase settings."
+    );
+
+    return;
+  }
+
+  alert(
+    "✅ Order successfully created!"
+  );
+
+  cart = [];
+
+  updateCart();
+}
+
+
+/* =========================
+   10. START APP
+   ========================= */
+
+loadProducts();
+
+updateCart();
+
+</script>
+
+</body>
+</html>GELI_PROJECT_URL_alter table products enable row level security;
+
+alter table orders enable row level security;
+
+create policy "Anyone can view products"
+on products
+for select
+to anon, authenticated
+using (true);
+
+create policy "Anyone can create orders"
+on orders
+for insert
+to anon, authenticated
+with check (true);Carafadiya Shop
+│
+├── 🛍️ Customer App
+│   ├── Search
+│   ├── Categories
+│   ├── Products
+│   ├── Cart
+│   └── Orders
+│
+└── 🏪 Seller Dashboard
+    ├── Add Product
+    ├── My Products
+    ├── Edit
+    └── Delete<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Carafadiya Shop</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f5f5f5;
+}
+header{
+  background:#222;
+  color:white;
+  padding:18px;
+  text-align:center;
+}
+nav{
+  display:flex;
+  gap:8px;
+  padding:10px;
+  background:white;
+}
+nav button{flex:1}
+button{
+  border:0;
+  border-radius:7px;
+  padding:11px;
+  background:#222;
+  color:white;
+  cursor:pointer;
+}
+input,select{
+  width:100%;
+  padding:12px;
+  margin:6px 0;
+  border:1px solid #ccc;
+  border-radius:7px;
+}
+.search{
+  margin:15px;
+  width:calc(100% - 30px);
+}
+.products{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  padding:15px;
+}
+.product{
+  background:white;
+  padding:10px;
+  border-radius:10px;
+  box-shadow:0 2px 5px #ccc;
+}
+.product img{
+  width:100%;
+  height:130px;
+  object-fit:cover;
+  border-radius:8px;
+}
+section{
+  background:white;
+  margin:15px;
+  padding:15px;
+  border-radius:10px;
+}
+.hidden{display:none}
+.item{
+  border-bottom:1px solid #ddd;
+  padding:12px 0;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Carafadiya Shop</h1>
+<p>China Products → Africa</p>
+</header>
+
+<nav>
+<button onclick="showCustomer()">🛍️ Shop</button>
+<button onclick="showSeller()">🏪 Seller</button>
+</nav>
+
+<!-- CUSTOMER -->
+
+<div id="customerPage">
+
+<input
+class="search"
+id="search"
+placeholder="🔍 Search products..."
+oninput="searchProducts()"
+>
+
+<div id="products" class="products">
+Loading...
+</div>
+
+<section>
+<h2>🛒 Cart</h2>
+
+<div id="cartItems">
+Cart is empty
+</div>
+
+<h3>
+Total: $<span id="total">0</span>
+</h3>
+
+<button onclick="placeOrder()">
+Place Order
+</button>
+</section>
+
+</div>
+
+
+<!-- SELLER -->
+
+<div id="sellerPage" class="hidden">
+
+<section>
+
+<h2>🏪 Seller Dashboard</h2>
+
+<h3>Add Product</h3>
+
+<input
+id="productName"
+placeholder="Product name"
+>
+
+<input
+id="productPrice"
+type="number"
+placeholder="Price"
+>
+
+<input
+id="productCategory"
+placeholder="Category"
+>
+
+<input
+id="productSeller"
+placeholder="Seller name"
+>
+
+<input
+id="productImage"
+placeholder="Image URL"
+>
+
+<button onclick="addProduct()">
+➕ Add Product
+</button>
+
+</section>
+
+
+<section>
+
+<h2>📦 My Products</h2>
+
+<div id="sellerProducts">
+Loading...
+</div>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL =
+"GELI_PROJECT_URL_HALKAN";
+
+const SUPABASE_KEY =
+"GELI_PUBLISHABLE_KEY_HALKAN";
+
+const db =
+supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+
+/* =========================
+   DATA
+========================= */
+
+let products=[];
+let cart=[];
+
+
+/* =========================
+   CUSTOMER PAGE
+========================= */
+
+function showCustomer(){
+
+document
+.getElementById("customerPage")
+.classList.remove("hidden");
+
+document
+.getElementById("sellerPage")
+.classList.add("hidden");
+
+loadProducts();
+
+}
+
+
+/* =========================
+   SELLER PAGE
+========================= */
+
+function showSeller(){
+
+document
+.getElementById("customerPage")
+.classList.add("hidden");
+
+document
+.getElementById("sellerPage")
+.classList.remove("hidden");
+
+loadSellerProducts();
+
+}
+
+
+/* =========================
+   LOAD PRODUCTS
+========================= */
+
+async function loadProducts(){
+
+const {data,error}=
+
+await db
+.from("products")
+.select("*")
+.order("id",{ascending:false});
+
+if(error){
+
+console.error(error);
+
+document.getElementById("products")
+.innerHTML="❌ Error loading products";
+
+return;
+}
+
+products=data||[];
+
+showProducts(products);
+
+}
+
+
+/* =========================
+   SHOW PRODUCTS
+========================= */
+
+function showProducts(list){
+
+const box=
+document.getElementById("products");
+
+if(!list.length){
+
+box.innerHTML="No products";
+
+return;
+}
+
+box.innerHTML=
+
+list.map(p=>`
+
+<div class="product">
+
+<img
+src="${p.image || 'https://via.placeholder.com/300'}"
+>
+
+<h3>${p.name}</h3>
+
+<p>
+💰 $${p.price}
+</p>
+
+<p>
+🏪 ${p.seller||"Seller"}
+</p>
+
+<p>
+📂 ${p.category||"Other"}
+</p>
+
+<button
+onclick="addToCart(${p.id})"
+>
+Add to Cart
+</button>
+
+</div>
+
+`).join("");
+
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+function searchProducts(){
+
+const text=
+document
+.getElementById("search")
+.value
+.toLowerCase();
+
+const result=
+products.filter(p=>
+
+p.name.toLowerCase().includes(text)
+
+||
+
+(p.category||"")
+.toLowerCase()
+.includes(text)
+
+||
+
+(p.seller||"")
+.toLowerCase()
+.includes(text)
+
+);
+
+showProducts(result);
+
+}
+
+
+/* =========================
+   CART
+========================= */
+
+function addToCart(id){
+
+const product=
+products.find(p=>p.id===id);
+
+if(!product)return;
+
+const existing=
+cart.find(x=>x.product.id===id);
+
+if(existing){
+
+existing.quantity++;
+
+}else{
+
+cart.push({
+product:product,
+quantity:1
+});
+
+}
+
+updateCart();
+
+}
+
+
+function updateCart(){
+
+const box=
+document.getElementById("cartItems");
+
+if(!cart.length){
+
+box.innerHTML="Cart is empty";
+
+}else{
+
+box.innerHTML=
+
+cart.map((item,i)=>`
+
+<div class="item">
+
+<b>${item.product.name}</b>
+
+<p>
+$${item.product.price}
+× ${item.quantity}
+</p>
+
+<button onclick="removeItem(${i})">
+Remove
+</button>
+
+</div>
+
+`).join("");
+
+}
+
+const total=
+cart.reduce(
+
+(sum,item)=>
+sum+
+Number(item.product.price)*
+item.quantity,
+
+0
+
+);
+
+document.getElementById("total")
+.textContent=
+total.toFixed(2);
+
+}
+
+
+function removeItem(i){
+
+cart.splice(i,1);
+
+updateCart();
+
+}
+
+
+/* =========================
+   ORDER
+========================= */
+
+async function placeOrder(){
+
+if(!cart.length){
+
+alert("Cart is empty");
+
+return;
+
+}
+
+const name=
+prompt("Customer name:");
+
+if(!name)return;
+
+const phone=
+prompt("Phone number:");
+
+if(!phone)return;
+
+const address=
+prompt("Delivery address:");
+
+if(!address)return;
+
+const total=
+cart.reduce(
+
+(sum,item)=>
+sum+
+Number(item.product.price)*
+item.quantity,
+
+0
+
+);
+
+const {error}=
+
+await db
+.from("orders")
+.insert({
+
+customer_name:name,
+phone:phone,
+address:address,
+total:total
+
+});
+
+if(error){
+
+console.error(error);
+
+alert("❌ Order failed");
+
+return;
+
+}
+
+alert("✅ Order created!");
+
+cart=[];
+
+updateCart();
+
+}
+
+
+/* =========================
+   SELLER ADD PRODUCT
+========================= */
+
+async function addProduct(){
+
+const name=
+document
+.getElementById("productName")
+.value;
+
+const price=
+document
+.getElementById("productPrice")
+.value;
+
+const category=
+document
+.getElementById("productCategory")
+.value;
+
+const seller=
+document
+.getElementById("productSeller")
+.value;
+
+const image=
+document
+.getElementById("productImage")
+.value;
+
+if(!name||!price||!seller){
+
+alert("Please fill product name, price and seller");
+
+return;
+
+}
+
+const {error}=
+
+await db
+.from("products")
+.insert({
+
+name:name,
+price:Number(price),
+category:category,
+seller:seller,
+image:image
+
+});
+
+if(error){
+
+console.error(error);
+
+alert("❌ Product could not be added");
+
+return;
+
+}
+
+alert("✅ Product added!");
+
+document
+.getElementById("productName")
+.value="";
+
+document
+.getElementById("productPrice")
+.value="";
+
+document
+.getElementById("productCategory")
+.value="";
+
+document
+.getElementById("productSeller")
+.value="";
+
+document
+.getElementById("productImage")
+.value="";
+
+loadSellerProducts();
+
+}
+
+
+/* =========================
+   SELLER PRODUCTS
+========================= */
+
+async function loadSellerProducts(){
+
+const {data,error}=
+
+await db
+.from("products")
+.select("*")
+.order("id",{ascending:false});
+
+if(error){
+
+document.getElementById("sellerProducts")
+.innerHTML=
+"❌ Error";
+
+return;
+
+}
+
+const box=
+document.getElementById("sellerProducts");
+
+if(!data.length){
+
+box.innerHTML="No products";
+
+return;
+
+}
+
+box.innerHTML=
+
+data.map(p=>`
+
+<div class="item">
+
+<b>${p.name}</b>
+
+<p>
+$${p.price}
+</p>
+
+<p>
+${p.seller}
+</p>
+
+<button
+onclick="deleteProduct(${p.id})"
+>
+🗑️ Delete
+</button>
+
+</div>
+
+`).join("");
+
+}
+
+
+/* =========================
+   DELETE PRODUCT
+========================= */
+
+async function deleteProduct(id){
+
+if(!confirm("Delete this product?"))
+return;
+
+const {error}=
+
+await db
+.from("products")
+.delete()
+.eq("id",id);
+
+if(error){
+
+console.error(error);
+
+alert("❌ Delete failed");
+
+return;
+
+}
+
+alert("✅ Product deleted");
+
+loadSellerProducts();
+loadProducts();
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+showCustomer();
+
+</script>
+
+</body>
+</html>create table profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  name text,
+  role text default 'customer',
+  created_at timestamp default now()
+);
+
+alter table profiles enable row level security;
+
+create policy "Users can view own profile"
+on profiles
+for select
+to authenticated
+using (auth.uid() = id);
+
+create policy "Users can create own profile"
+on profiles
+for insert
+to authenticated
+with check (auth.uid() = id);
+
+create policy "Users can update own profile"
+on profiles
+for update
+to authenticated
+using (auth.uid() = id);Sign Up
+   ↓
+Email + Password
+   ↓
+Account
+   ↓
+ShopSign Up
+   ↓
+Account
+   ↓
+Seller Dashboardcreate table if not exists profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  name text,
+  role text not null default 'customer',
+  created_at timestamptz default now()
+);
+
+alter table profiles enable row level security;
+
+create policy "Users can read own profile"
+on profiles
+for select
+to authenticated
+using (auth.uid() = id);
+
+create policy "Users can create own profile"
+on profiles
+for insert
+to authenticated
+with check (auth.uid() = id);
+
+create policy "Users can update own profile"
+on profiles
+for update
+to authenticated
+using (auth.uid() = id);<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Carafadiya Shop</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f5f5f5;
+}
+header{
+  background:#222;
+  color:white;
+  padding:20px;
+  text-align:center;
+}
+nav{
+  display:flex;
+  gap:8px;
+  padding:10px;
+  background:white;
+}
+button{
+  border:0;
+  border-radius:7px;
+  padding:11px;
+  background:#222;
+  color:white;
+  cursor:pointer;
+}
+nav button{flex:1}
+input{
+  width:100%;
+  padding:12px;
+  margin:6px 0;
+  border:1px solid #ccc;
+  border-radius:7px;
+}
+.search{
+  margin:15px;
+  width:calc(100% - 30px);
+}
+section{
+  background:white;
+  margin:15px;
+  padding:15px;
+  border-radius:10px;
+}
+.products{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  padding:15px;
+}
+.product{
+  background:white;
+  padding:10px;
+  border-radius:10px;
+  box-shadow:0 2px 5px #ccc;
+}
+.product img{
+  width:100%;
+  height:130px;
+  object-fit:cover;
+  border-radius:8px;
+}
+.full{width:100%;margin-top:7px}
+.hidden{display:none}
+.message{text-align:center;padding:25px}
+.item{
+  padding:12px 0;
+  border-bottom:1px solid #ddd;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Carafadiya Shop</h1>
+<p>China Products → Africa</p>
+<p id="userInfo"></p>
+</header>
+
+<nav>
+<button onclick="showShop()">🛍️ Shop</button>
+<button id="sellerButton" class="hidden"
+onclick="showSeller()">🏪 Seller</button>
+<button onclick="showAuth()">👤 Account</button>
+</nav>
+
+
+<!-- AUTH -->
+
+<section id="authPage">
+
+<h2>👤 Account</h2>
+
+<input
+id="name"
+placeholder="Your name"
+>
+
+<input
+id="email"
+type="email"
+placeholder="Email"
+>
+
+<input
+id="password"
+type="password"
+placeholder="Password"
+>
+
+<button class="full" onclick="signup()">
+Create Account
+</button>
+
+<button class="full" onclick="login()">
+Login
+</button>
+
+<button class="full hidden"
+id="logoutButton"
+onclick="logout()">
+Logout
+</button>
+
+<p id="authMessage"></p>
+
+</section>
+
+
+<!-- SHOP -->
+
+<div id="shopPage" class="hidden">
+
+<input
+id="search"
+class="search"
+placeholder="🔍 Search products..."
+oninput="searchProducts()"
+>
+
+<div id="products" class="products">
+Loading...
+</div>
+
+<section>
+
+<h2>🛒 Cart</h2>
+
+<div id="cartItems">
+Cart is empty
+</div>
+
+<h3>
+Total: $<span id="total">0</span>
+</h3>
+
+<button class="full" onclick="placeOrder()">
+Place Order
+</button>
+
+</section>
+
+</div>
+
+
+<!-- SELLER -->
+
+<div id="sellerPage" class="hidden">
+
+<section>
+
+<h2>🏪 Seller Dashboard</h2>
+
+<input
+id="productName"
+placeholder="Product name"
+>
+
+<input
+id="productPrice"
+type="number"
+placeholder="Price"
+>
+
+<input
+id="productCategory"
+placeholder="Category"
+>
+
+<input
+id="productSeller"
+placeholder="Seller name"
+>
+
+<input
+id="productImage"
+placeholder="Image URL"
+>
+
+<button class="full" onclick="addProduct()">
+➕ Add Product
+</button>
+
+</section>
+
+<section>
+
+<h2>📦 Products</h2>
+
+<div id="sellerProducts">
+Loading...
+</div>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* =========================
+SUPABASE
+========================= */
+
+const SUPABASE_URL =
+"GELI_PROJECT_URL_HALKAN";
+
+const SUPABASE_KEY =
+"GELI_PUBLISHABLE_KEY_HALKAN";
+
+const db =
+supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+
+/* =========================
+DATA
+========================= */
+
+let products=[];
+let cart=[];
+let currentUser=null;
+let currentProfile=null;
+
+
+/* =========================
+SIGN UP
+========================= */
+
+async function signup(){
+
+const name=
+document.getElementById("name").value.trim();
+
+const email=
+document.getElementById("email").value.trim();
+
+const password=
+document.getElementById("password").value;
+
+if(!name||!email||!password){
+
+showMessage("Fill all fields.");
+
+return;
+}
+
+if(password.length<6){
+
+showMessage(
+"Password must be at least 6 characters."
+);
+
+return;
+}
+
+const {data,error}=
+await db.auth.signUp({
+
+email:email,
+password:password
+
+});
+
+if(error){
+
+showMessage(error.message);
+
+return;
+}
+
+if(data.user){
+
+const {error:profileError}=
+await db
+.from("profiles")
+.insert({
+
+id:data.user.id,
+name:name,
+role:"customer"
+
+});
+
+if(profileError){
+
+console.error(profileError);
+
+showMessage(
+"Account created, but profile setup failed."
+);
+
+return;
+}
+
+showMessage(
+"✅ Account created! Check your email if confirmation is required."
+);
+
+}
+
+}
+
+
+/* =========================
+LOGIN
+========================= */
+
+async function login(){
+
+const email=
+document.getElementById("email").value.trim();
+
+const password=
+document.getElementById("password").value;
+
+if(!email||!password){
+
+showMessage("Enter email and password.");
+
+return;
+}
+
+const {data,error}=
+await db.auth.signInWithPassword({
+
+email:email,
+password:password
+
+});
+
+if(error){
+
+showMessage(error.message);
+
+return;
+}
+
+currentUser=data.user;
+
+await loadProfile();
+
+showMessage("✅ Login successful!");
+
+}
+
+
+/* =========================
+PROFILE
+========================= */
+
+async function loadProfile(){
+
+if(!currentUser)return;
+
+const {data,error}=
+await db
+.from("profiles")
+.select("*")
+.eq("id",currentUser.id)
+.single();
+
+if(error){
+
+console.error(error);
+
+return;
+}
+
+currentProfile=data;
+
+document.getElementById("userInfo")
+.textContent=
+"👋 "+(data.name||currentUser.email);
+
+document
+.getElementById("logoutButton")
+.classList.remove("hidden");
+
+if(data.role==="seller"){
+
+document
+.getElementById("sellerButton")
+.classList.remove("hidden");
+
+}else{
+
+document
+.getElementById("sellerButton")
+.classList.add("hidden");
+
+}
+
+showShop();
+
+}
+
+
+/* =========================
+LOGOUT
+========================= */
+
+async function logout(){
+
+await db.auth.signOut();
+
+currentUser=null;
+currentProfile=null;
+cart=[];
+
+document.getElementById("userInfo")
+.textContent="";
+
+document
+.getElementById("logoutButton")
+.classList.add("hidden");
+
+document
+.getElementById("sellerButton")
+.classList.add("hidden");
+
+showAuth();
+
+}
+
+
+/* =========================
+AUTH PAGE
+========================= */
+
+function showAuth(){
+
+hideAll();
+
+document
+.getElementById("authPage")
+.classList.remove("hidden");
+
+}
+
+
+/* =========================
+SHOP
+========================= */
+
+function showShop(){
+
+hideAll();
+
+document
+.getElementById("shopPage")
+.classList.remove("hidden");
+
+loadProducts();
+
+}
+
+
+/* =========================
+SELLER
+========================= */
+
+function showSeller(){
+
+if(!currentProfile||
+currentProfile.role!=="seller"){
+
+alert("Seller access only.");
+
+return;
+}
+
+hideAll();
+
+document
+.getElementById("sellerPage")
+.classList.remove("hidden");
+
+loadSellerProducts();
+
+}
+
+
+/* =========================
+HIDE ALL
+========================= */
+
+function hideAll(){
+
+document
+.getElementById("authPage")
+.classList.add("hidden");
+
+document
+.getElementById("shopPage")
+.classList.add("hidden");
+
+document
+.getElementById("sellerPage")
+.classList.add("hidden");
+
+}
+
+
+/* =========================
+LOAD PRODUCTS
+========================= */
+
+async function loadProducts(){
+
+const {data,error}=
+await db
+.from("products")
+.select("*")
+.order("id",{ascending:false});
+
+if(error){
+
+console.error(error);
+
+document.getElementById("products")
+.innerHTML=
+"❌ Could not load products.";
+
+return;
+}
+
+products=data||[];
+
+showProducts(products);
+
+}
+
+
+/* =========================
+SHOW PRODUCTS
+========================= */
+
+function showProducts(list){
+
+const box=
+document.getElementById("products");
+
+if(!list.length){
+
+box.innerHTML=
+"No products found.";
+
+return;
+}
+
+box.innerHTML=
+list.map(p=>`
+
+<div class="product">
+
+<img
+src="${p.image||
+'https://via.placeholder.com/300'}"
+>
+
+<h3>${p.name}</h3>
+
+<p>💰 $${p.price}</p>
+
+<p>🏪 ${p.seller||"Seller"}</p>
+
+<p>📂 ${p.category||"Other"}</p>
+
+<button
+class="full"
+onclick="addToCart(${p.id})">
+Add to Cart
+</button>
+
+</div>
+
+`).join("");
+
+}
+
+
+/* =========================
+SEARCH
+========================= */
+
+function searchProducts(){
+
+const text=
+document
+.getElementById("search")
+.value
+.toLowerCase();
+
+const result=
+products.filter(p=>
+
+p.name.toLowerCase().includes(text)
+
+||
+
+(p.category||"")
+.toLowerCase()
+.includes(text)
+
+||
+
+(p.seller||"")
+.toLowerCase()
+.includes(text)
+
+);
+
+showProducts(result);
+
+}
+
+
+/* =========================
+CART
+========================= */
+
+function addToCart(id){
+
+const product=
+products.find(p=>p.id===id);
+
+if(!product)return;
+
+const existing=
+cart.find(x=>x.product.id===id);
+
+if(existing){
+
+existing.quantity++;
+
+}else{
+
+cart.push({
+
+product:product,
+quantity:1
+
+});
+
+}
+
+updateCart();
+
+}
+
+
+function updateCart(){
+
+const box=
+document.getElementById("cartItems");
+
+if(!cart.length){
+
+box.innerHTML="Cart is empty";
+
+}else{
+
+box.innerHTML=
+cart.map((item,i)=>`
+
+<div class="item">
+
+<b>${item.product.name}</b>
+
+<p>
+$${item.product.price}
+× ${item.quantity}
+</p>
+
+<button
+onclick="removeItem(${i})">
+Remove
+</button>
+
+</div>
+
+`).join("");
+
+}
+
+const total=
+cart.reduce(
+
+(sum,item)=>
+sum+
+Number(item.product.price)*
+item.quantity,
+
+0
+
+);
+
+document.getElementById("total")
+.textContent=
+total.toFixed(2);
+
+}
+
+
+function removeItem(i){
+
+cart.splice(i,1);
+
+updateCart();
+
+}
+
+
+/* =========================
+ORDER
+========================= */
+
+async function placeOrder(){
+
+if(!currentUser){
+
+alert("Please login first.");
+
+showAuth();
+
+return;
+}
+
+if(!cart.length){
+
+alert("Cart is empty.");
+
+return;
+}
+
+const name=
+prompt("Customer name:");
+
+if(!name)return;
+
+const phone=
+prompt("Phone number:");
+
+if(!phone)return;
+
+const address=
+prompt("Delivery address:");
+
+if(!address)return;
+
+const total=
+cart.reduce(
+
+(sum,item)=>
+sum+
+Number(item.product.price)*
+item.quantity,
+
+0
+
+);
+
+const {error}=
+await db
+.from("orders")
+.insert({
+
+customer_name:name,
+phone:phone,
+address:address,
+total:total
+
+});
+
+if(error){
+
+console.error(error);
+
+alert("❌ Order failed.");
+
+return;
+}
+
+alert("✅ Order created!");
+
+cart=[];
+
+updateCart();
+
+}
+
+
+/* =========================
+ADD PRODUCT
+========================= */
+
+async function addProduct(){
+
+if(!currentUser||
+!currentProfile||
+currentProfile.role!=="seller"){
+
+alert("Seller login required.");
+
+return;
+}
+
+const name=
+document.getElementById("productName")
+.value.trim();
+
+const price=
+document.getElementById("productPrice")
+.value;
+
+const category=
+document.getElementById("productCategory")
+.value.trim();
+
+const seller=
+document.getElementById("productSeller")
+.value.trim();
+
+const image=
+document.getElementById("productImage")
+.value.trim();
+
+if(!name||!price||!seller){
+
+alert(
+"Product name, price and seller are required."
+);
+
+return;
+}
+
+const {error}=
+await db
+.from("products")
+.insert({
+
+name:name,
+price:Number(price),
+category:category,
+seller:seller,
+image:image,
+seller_id:currentUser.id
+
+});
+
+if(error){
+
+console.error(error);
+
+alert(
+"❌ Product could not be added."
+);
+
+return;
+}
+
+alert("✅ Product added!");
+
+document.getElementById("productName").value="";
+document.getElementById("productPrice").value="";
+document.getElementById("productCategory").value="";
+document.getElementById("productSeller").value="";
+document.getElementById("productImage").value="";
+
+loadSellerProducts();
+
+}
+
+
+/* =========================
+SELLER PRODUCTS
+========================= */
+
+async function loadSellerProducts(){
+
+const {data,error}=
+await db
+.from("products")
+.select("*")
+.eq("seller_id",currentUser.id)
+.order("id",{ascending:false});
+
+if(error){
+
+console.error(error);
+
+document.getElementById("sellerProducts")
+.innerHTML="❌ Error";
+
+return;
+}
+
+const box=
+document.getElementById("sellerProducts");
+
+if(!data.length){
+
+box.innerHTML=
+"No products yet.";
+
+return;
+}
+
+box.innerHTML=
+data.map(p=>`
+
+<div class="item">
+
+<b>${p.name}</b>
+
+<p>$${p.price}</p>
+
+<p>${p.seller}</p>
+
+<button
+onclick="deleteProduct(${p.id})">
+🗑️ Delete
+</button>
+
+</div>
+
+`).join("");
+
+}
+
+
+/* =========================
+DELETE PRODUCT
+========================= */
+
+async function deleteProduct(id){
+
+if(!confirm("Delete this product?"))
+return;
+
+const {error}=
+await db
+.from("products")
+.delete()
+.eq("id",id)
+.eq("seller_id",currentUser.id);
+
+if(error){
+
+console.error(error);
+
+alert("❌ Delete failed.");
+
+return;
+}
+
+alert("✅ Product deleted.");
+
+loadSellerProducts();
+loadProducts();
+
+}
+
+
+/* =========================
+MESSAGE
+========================= */
+
+function showMessage(message){
+
+document.getElementById("authMessage")
+.textContent=message;
+
+}
+
+
+/* =========================
+CHECK EXISTING SESSION
+========================= */
+
+async function startApp(){
+
+const {data}=
+await db.auth.getSession();
+
+if(data.session){
+
+currentUser=data.session.user;
+
+await loadProfile();
+
+}else{
+
+showAuth();
+
+}
+
+}
+
+startApp();
+
+</script>
+
+</body>
+</html>-- PRODUCTS
+alter table products
+add column if not exists seller_id uuid references auth.users(id);
+
+alter table products enable row level security;
+
+drop policy if exists "Anyone can view products" on products;
+drop policy if exists "Sellers can add products" on products;
+drop policy if exists "Sellers can delete own products" on products;
+
+create policy "Anyone can view products"
+on products
+for select
+to anon, authenticated
+using (true);
+
+-- PROFILES
+create table if not exists profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  name text,
+  role text not null default 'customer',
+  created_at timestamptz default now()
+);
+
+alter table profiles enable row level security;
+
+drop policy if exists "Users can read own profile" on profiles;
+
+create policy "Users can read own profile"
+on profiles
+for select
+to authenticated
+using (auth.uid() = id);
+
+-- Automatically create customer profile after signup
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  insert into public.profiles (id, name, role)
+  values (
+    new.id,
+    coalesce(new.raw_user_meta_data->>'name', ''),
+    'customer'
+  );
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_created
+on auth.users;
+
+create trigger on_auth_user_created
+after insert on auth.users
+for each row
+execute procedure public.handle_new_user();
+
+-- Check seller
+create or replace function public.is_seller()
+returns boolean
+language sql
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.profiles
+    where id = auth.uid()
+    and role = 'seller'
+  );
+$$;
+
+grant execute on function public.is_seller()
+to authenticated;
+
+create policy "Sellers can add products"
+on products
+for insert
+to authenticated
+with check (
+  public.is_seller()
+  and seller_id = auth.uid()
+);
+
+create policy "Sellers can delete own products"
+on products
+for delete
+to authenticated
+using (
+  public.is_seller()
+  and seller_id = auth.uid()
+);
+
+-- ORDERS
+alter table orders
+add column if not exists customer_id uuid
+references auth.users(id);
+
+alter table orders
+add column if not exists items jsonb default '[]'::jsonb;
+
+alter table orders enable row level security;
+
+drop policy if exists "Anyone can create orders" on orders;
+
+create policy "Customers can create own orders"
+on orders
+for insert
+to authenticated
+with check (
+  customer_id = auth.uid()
+);
+
+drop policy if exists "Users can view own orders" on orders;
+
+create policy "Users can view own orders"
+on orders
+for select
+to authenticated
+using (
+  customer_id = auth.uid()
+);update profiles
+set role = 'seller'
+where id = 'USER-UUID-HALKAN';const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_KEY = "YOUR_PUBLISHABLE_KEY";-- ADMIN ROLE
+alter table profiles
+drop constraint if exists profiles_role_check;
+
+-- Ku dar admin role
+-- Roles: customer, seller, admin
+
+-- ADMIN CHECK FUNCTION
+create or replace function public.is_admin()
+returns boolean
+language sql
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.profiles
+    where id = auth.uid()
+      and role = 'admin'
+  );
+$$;
+
+grant execute on function public.is_admin()
+to authenticated;
+
+
+-- ADMIN wuxuu arki karaa profiles
+create policy "Admins can view profiles"
+on profiles
+for select
+to authenticated
+using (
+  public.is_admin()
+  or auth.uid() = id
+);
+
+
+-- ADMIN wuxuu beddeli karaa role
+create policy "Admins can update profiles"
+on profiles
+for update
+to authenticated
+using (
+  public.is_admin()
+)
+with check (
+  public.is_admin()
+);
+
+
+-- ORDER STATUS
+alter table orders
+add column if not exists status text
+default 'pending';
+
+
+-- ADMIN wuxuu arki karaa orders
+create policy "Admins can view all orders"
+on orders
+for select
+to authenticated
+using (
+  public.is_admin()
+  or customer_id = auth.uid()
+);
+
+
+-- ADMIN wuxuu update-gareyn karaa orders
+create policy "Admins can update orders"
+on orders
+for update
+to authenticated
+using (
+  public.is_admin()
+)
+with check (
+  public.is_admin()
+);-- Allow admin to view all profiles
+drop policy if exists "Admins can view profiles" on profiles;
+
+create policy "Admins can view profiles"
+on profiles
+for select
+to authenticated
+using (
+  auth.uid() = id OR public.is_admin()
+);
+
+-- Allow admin to update profiles
+drop policy if exists "Admins can update profiles" on profiles;
+
+create policy "Admins can update profiles"
+on profiles
+for update
+to authenticated
+using (public.is_admin())
+with check (public.is_admin());
+
+-- Allow admin to view all orders
+drop policy if exists "Admins can view all orders" on orders;
+
+create policy "Admins can view all orders"
+on orders
+for select
+to authenticated
+using (
+  customer_id = auth.uid()
+  OR public.is_admin()
+);
+
+-- Allow admin to update orders
+drop policy if exists "Admins can update orders" on orders;
+
+create policy "Admins can update orders"
+on orders
+for update
+to authenticated
+using (public.is_admin())
+with check (public.is_admin());alter table products
+add column if not exists description text;
+
+alter table products
+add column if not exists seller_phone text;<section id="productDetails" class="hidden">
+  <button onclick="showShop()">← Back</button>
+
+  <div id="detailsContent"></div>
+</section><button
+  class="full"
+  onclick="openProduct(${p.id})">
+  👀 View Product
+</button>async function openProduct(id){
+
+  const product = products.find(p => p.id === id);
+
+  if(!product) return;
+
+  hideAll();
+
+  document
+    .getElementById("productDetails")
+    .classList.remove("hidden");
+
+  const image =
+    product.image ||
+    "https://via.placeholder.com/500";
+
+  document.getElementById("detailsContent").innerHTML = `
+
+    <img
+      src="${image}"
+      style="width:100%;max-height:350px;object-fit:cover;border-radius:12px"
+    >
+
+    <h1>${product.name}</h1>
+
+    <h2>💰 $${product.price}</h2>
+
+    <p>📂 Category: ${product.category || "Other"}</p>
+
+    <p>🏪 Seller: ${product.seller || "Seller"}</p>
+
+    <p>
+      ${product.description || "No description yet."}
+    </p>
+
+    <button
+      class="full"
+      onclick="addToCart(${product.id})">
+      🛒 Add to Cart
+    </button>
+
+    <button
+      class="full"
+      onclick="openSellerStore('${product.seller || ""}')">
+      🏪 Visit Seller Store
+    </button>
+
+  `;
+}<section id="sellerStore" class="hidden">
+
+  <button onclick="showShop()">← Back</button>
+
+  <h2>🏪 Seller Store</h2>
+
+  <h3 id="storeName"></h3>
+
+  <div id="storeProducts" class="products"></div>
+
+</section>async function openSellerStore(seller){
+
+  hideAll();
+
+  document
+    .getElementById("sellerStore")
+    .classList.remove("hidden");
+
+  document.getElementById("storeName")
+    .textContent = seller;
+
+  const sellerProducts =
+    products.filter(p => p.seller === seller);
+
+  document.getElementById("storeProducts")
+    .innerHTML =
+    sellerProducts.map(p => `
+
+      <div class="product">
+
+        <img
+          src="${p.image || 'https://via.placeholder.com/300'}"
+        >
+
+        <h3>${p.name}</h3>
+
+        <p>💰 $${p.price}</p>
+
+        <button
+          class="full"
+          onclick="openProduct(${p.id})">
+          View
+        </button>
+
+      </div>
+
+    `).join("");
+}create table if not exists messages (
+  id bigint generated always as identity primary key,
+  sender_id uuid not null references auth.users(id) on delete cascade,
+  receiver_id uuid not null references auth.users(id) on delete cascade,
+  product_id bigint references products(id) on delete set null,
+  message text not null,
+  created_at timestamptz default now()
+);
+
+alter table messages enable row level security;
+
+create policy "Users can read their messages"
+on messages
+for select
+to authenticated
+using (
+  sender_id = auth.uid()
+  or receiver_id = auth.uid()
+);
+
+create policy "Users can send messages"
+on messages
+for insert
+to authenticated
+with check (
+  sender_id = auth.uid()
+);<section id="chatPage" class="hidden">
+
+  <button onclick="showShop()">← Back</button>
+
+  <h2>💬 Chat</h2>
+
+  <div id="chatMessages"
+       style="height:350px;overflow:auto;
+       border:1px solid #ddd;padding:10px">
+  </div>
+
+  <input
+    id="chatInput"
+    placeholder="Write a message..."
+  >
+
+  <button
+    class="full"
+    onclick="sendMessage()">
+    📤 Send
+  </button>
+
+</section><button
+  class="full"
+  onclick="openChat('${product.seller_id}', ${product.id})">
+  💬 Chat with Seller
+</button>create table if not exists reviews (
+  id bigint generated always as identity primary key,
+  product_id bigint not null references products(id) on delete cascade,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  rating integer not null check (rating between 1 and 5),
+  comment text,
+  created_at timestamptz default now()
+);
+
+alter table reviews enable row level security;
+
+create policy "Anyone can read reviews"
+on reviews
+for select
+to anon, authenticated
+using (true);
+
+create policy "Users can create reviews"
+on reviews
+for insert
+to authenticated
+with check (user_id = auth.uid());
+
+create policy "Users can update own reviews"
+on reviews
+for update
+to authenticated
+using (user_id = auth.uid())
+with check (user_id = auth.uid());
+
+create policy "Users can delete own reviews"
+on reviews
+for delete
+to authenticated
+using (user_id = auth.uid());<div id="reviewsSection">
+
+  <h2>⭐ Reviews</h2>
+
+  <div id="reviewsList">
+    Loading reviews...
+  </div>
+
+  <hr>
+
+  <select id="reviewRating">
+    <option value="5">⭐⭐⭐⭐⭐ 5</option>
+    <option value="4">⭐⭐⭐⭐ 4</option>
+    <option value="3">⭐⭐⭐ 3</option>
+    <option value="2">⭐⭐ 2</option>
+    <option value="1">⭐ 1</option>
+  </select>
+
+  <input
+    id="reviewComment"
+    placeholder="Write your review..."
+  >
+
+  <button
+    class="full"
+    onclick="addReview()">
+    ⭐ Submit Review
+  </button>
+
+</div>let reviewProductId = null;
+
+async function loadReviews(productId){
+
+  reviewProductId = productId;
+
+  const {data,error} =
+    await db
+      .from("reviews")
+      .select("*")
+      .eq("product_id",productId)
+      .order("created_at",{ascending:false});
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  const box =
+    document.getElementById("reviewsList");
+
+  if(!data || data.length === 0){
+
+    box.innerHTML =
+      "No reviews yet.";
+
+    return;
+  }
+
+  box.innerHTML =
+    data.map(r => `
+
+      <div class="item">
+
+        <div>
+          ${"⭐".repeat(r.rating)}
+        </div>
+
+        <p>${r.comment || ""}</p>
+
+      </div>
+
+    `).join("");
+}
+
+
+async function addReview(){
+
+  if(!currentUser){
+
+    alert("Please login first.");
+    showAuth();
+    return;
+  }
+
+  if(!reviewProductId){
+
+    alert("Product not selected.");
+    return;
+  }
+
+  const rating =
+    Number(
+      document.getElementById("reviewRating").value
+    );
+
+  const comment =
+    document
+      .getElementById("reviewComment")
+      .value
+      .trim();
+
+  const {error} =
+    await db
+      .from("reviews")
+      .insert({
+
+        product_id:reviewProductId,
+        user_id:currentUser.id,
+        rating:rating,
+        comment:comment
+
+      });
+
+  if(error){
+
+    console.error(error);
+    alert("Review failed.");
+    return;
+  }
+
+  document
+    .getElementById("reviewComment")
+    .value = "";
+
+  alert("✅ Review added!");
+
+  loadReviews(reviewProductId);
+}alter table orders
+add column if not exists payment_method text default 'cash';
+
+alter table orders
+add column if not exists payment_status text default 'unpaid';
+
+alter table orders
+add column if not exists status text default 'pending';<section id="checkoutPage" class="hidden">
+
+  <button onclick="showShop()">← Back</button>
+
+  <h2>🧾 Checkout</h2>
+
+  <input id="checkoutName" placeholder="Full name">
+
+  <input id="checkoutPhone" placeholder="Phone number">
+
+  <input id="checkoutAddress" placeholder="Delivery address">
+
+  <select id="paymentMethod">
+    <option value="cash">💵 Cash on Delivery</option>
+    <option value="mobile">📱 Mobile Payment</option>
+  </select>
+
+  <h3>
+    Total: $<span id="checkoutTotal">0</span>
+  </h3>
+
+  <button class="full" onclick="confirmOrder()">
+    ✅ Confirm Order
+  </button>
+
+  <p id="checkoutMessage"></p>
+
+</section><button class="full" onclick="placeOrder()">
+  Place Order
+</button>function openCheckout(){
+
+  if(!currentUser){
+
+    alert("Please login first.");
+    showAuth();
+    return;
+  }
+
+  if(!cart.length){
+
+    alert("Your cart is empty.");
+    return;
+  }
+
+  hideAll();
+
+  document
+    .getElementById("checkoutPage")
+    .classList.remove("hidden");
+
+  const total =
+    cart.reduce(
+      (sum,item)=>
+        sum +
+        Number(item.product.price) *
+        item.quantity,
+      0
+    );
+
+  document
+    .getElementById("checkoutTotal")
+    .textContent =
+    total.toFixed(2);
+}
+
+
+async function confirmOrder(){
+
+  if(!currentUser || !cart.length)
+    return;
+
+  const name =
+    document
+      .getElementById("checkoutName")
+      .value.trim();
+
+  const phone =
+    document
+      .getElementById("checkoutPhone")
+      .value.trim();
+
+  const address =
+    document
+      .getElementById("checkoutAddress")
+      .value.trim();
+
+  const payment =
+    document
+      .getElementById("paymentMethod")
+      .value;
+
+  if(!name || !phone || !address){
+
+    alert("Please fill all information.");
+    return;
+  }
+
+  const total =
+    cart.reduce(
+      (sum,item)=>
+        sum +
+        Number(item.product.price) *
+        item.quantity,
+      0
+    );
+
+  const items =
+    cart.map(item => ({
+      product_id:item.product.id,
+      name:item.product.name,
+      price:item.product.price,
+      quantity:item.quantity
+    }));
+
+  const {error} =
+    await db
+      .from("orders")
+      .insert({
+
+        customer_id:currentUser.id,
+
+        customer_name:name,
+
+        phone:phone,
+
+        address:address,
+
+        total:total,
+
+        items:items,
+
+        payment_method:payment,
+
+        payment_status:
+          payment === "cash"
+          ? "unpaid"
+          : "pending",
+
+        status:"pending"
+
+      });
+
+  if(error){
+
+    console.error(error);
+
+    alert("❌ Order failed.");
+    return;
+  }
+
+  alert("✅ Order placed successfully!");
+
+  cart=[];
+
+  updateCart();
+
+  showShop();
+}<section id="adminPage" class="hidden">
+
+  <h2>👑 Admin Dashboard</h2>
+
+  <h3>📦 All Orders</h3>
+
+  <div id="adminOrders">
+    Loading orders...
+  </div>
+
+</section><button
+  id="adminButton"
+  class="hidden"
+  onclick="showAdmin()">
+  👑 Admin
+</button>function showAdmin(){
+
+  if(!currentProfile ||
+     currentProfile.role !== "admin"){
+
+    alert("Admin access only.");
+    return;
+  }
+
+  hideAll();
+
+  document
+    .getElementById("adminPage")
+    .classList.remove("hidden");
+
+  loadAdminOrders();
+}
+
+
+async function loadAdminOrders(){
+
+  const {data,error} =
+    await db
+      .from("orders")
+      .select("*")
+      .order("created_at",{ascending:false});
+
+  if(error){
+
+    console.error(error);
+
+    document.getElementById("adminOrders")
+      .innerHTML = "❌ Could not load orders.";
+
+    return;
+  }
+
+  const box =
+    document.getElementById("adminOrders");
+
+  if(!data.length){
+
+    box.innerHTML = "No orders yet.";
+    return;
+  }
+
+  box.innerHTML =
+    data.map(order => `
+
+      <div class="item">
+
+        <h3>
+          Order #${order.id}
+        </h3>
+
+        <p>
+          👤 ${order.customer_name}
+        </p>
+
+        <p>
+          📞 ${order.phone}
+        </p>
+
+        <p>
+          📍 ${order.address}
+        </p>
+
+        <p>
+          💰 $${order.total}
+        </p>
+
+        <p>
+          💳 ${order.payment_method || "cash"}
+        </p>
+
+        <p>
+          💵 Payment:
+          ${order.payment_status || "unpaid"}
+        </p>
+
+        <p>
+          📦 Status:
+          <b>${order.status || "pending"}</b>
+        </p>
+
+        <select
+          onchange="updateOrderStatus(
+            ${order.id},
+            this.value
+          )">
+
+          <option value="pending"
+            ${order.status==="pending"?"selected":""}>
+            Pending
+          </option>
+
+          <option value="confirmed"
+            ${order.status==="confirmed"?"selected":""}>
+            Confirmed
+          </option>
+
+          <option value="shipped"
+            ${order.status==="shipped"?"selected":""}>
+            Shipped
+          </option>
+
+          <option value="delivered"
+            ${order.status==="delivered"?"selected":""}>
+            Delivered
+          </option>
+
+          <option value="cancelled"
+            ${order.status==="cancelled"?"selected":""}>
+            Cancelled
+          </option>
+
+        </select>
+
+      </div>
+
+    `).join("");
+}
+
+
+async function updateOrderStatus(id,status){
+
+  const {error} =
+    await db
+      .from("orders")
+      .update({
+        status:status
+      })
+      .eq("id",id);
+
+  if(error){
+
+    console.error(error);
+
+    alert("❌ Update failed.");
+    return;
+  }
+
+  alert("✅ Order status updated!");
+
+  loadAdminOrders();
+}if(data.role === "admin"){
+
+  document
+    .getElementById("adminButton")
+    .classList.remove("hidden");
+
+}else{
+
+  document
+    .getElementById("adminButton")
+    .classList.add("hidden");
+}document
+  .getElementById("adminPage")
+  .classList.add("hidden");create policy "Sellers can update own products"
+on products
+for update
+to authenticated
+using (
+  public.is_seller()
+  and seller_id = auth.uid()
+)
+with check (
+  public.is_seller()
+  and seller_id = auth.uid()
+);product-imagesasync function addProductWithImage(){
+
+  if(!currentUser ||
+     currentProfile?.role !== "seller"){
+
+    alert("Seller access required.");
+    return;
+  }
+
+  const name =
+    document.getElementById("productName")
+    .value.trim();
+
+  const price =
+    Number(
+      document.getElementById("productPrice")
+      .value
+    );
+
+  const category =
+    document.getElementById("productCategory")
+    .value.trim();
+
+  const description =
+    document.getElementById("productDescription")
+    .value.trim();
+
+  const file =
+    document.getElementById("productImageFile")
+    .files[0];
+
+  if(!name || !price || !file){
+
+    alert("Product name, price and image are required.");
+    return;
+  }
+
+  const extension =
+    file.name.split(".").pop();
+
+  const fileName =
+    currentUser.id +
+    "/" +
+    Date.now() +
+    "." +
+    extension;
+
+  /* Upload image */
+
+  const {error:uploadError} =
+    await db.storage
+      .from("product-images")
+      .upload(fileName,file);
+
+  if(uploadError){
+
+    console.error(uploadError);
+    alert("❌ Image upload failed.");
+    return;
+  }
+
+  /* Get public image URL */
+
+  const {data:imageData} =
+    db.storage
+      .from("product-images")
+      .getPublicUrl(fileName);
+
+  const imageUrl =
+    imageData.publicUrl;
+
+  /* Add product */
+
+  const {error} =
+    await db
+      .from("products")
+      .insert({
+
+        name:name,
+
+        price:price,
+
+        category:category,
+
+        description:description,
+
+        seller:currentProfile.name,
+
+        seller_id:currentUser.id,
+
+        image:imageUrl
+
+      });
+
+  if(error){
+
+    console.error(error);
+
+    alert("❌ Product could not be added.");
+    return;
+  }
+
+  alert("✅ Product added successfully!");
+
+  document.getElementById("productName").value="";
+  document.getElementById("productPrice").value="";
+  document.getElementById("productCategory").value="";
+  document.getElementById("productDescription").value="";
+  document.getElementById("productImageFile").value="";
+
+  loadProducts();
+  loadSellerProducts();
+}<section id="ordersPage" class="hidden">
+
+  <button onclick="showShop()">← Shop</button>
+
+  <h2>📦 My Orders</h2>
+
+  <div id="myOrders">
+    Loading...
+  </div>
+
+</section><button onclick="showOrders()">
+  📦 Orders
+</button>function showOrders(){
+
+  if(!currentUser){
+
+    alert("Please login first.");
+    showAuth();
+    return;
+  }
+
+  hideAll();
+
+  document
+    .getElementById("ordersPage")
+    .classList.remove("hidden");
+
+  loadMyOrders();
+}
+
+
+async function loadMyOrders(){
+
+  const {data,error} =
+    await db
+      .from("orders")
+      .select("*")
+      .eq("customer_id",currentUser.id)
+      .order("created_at",{ascending:false});
+
+  if(error){
+
+    console.error(error);
+
+    document.getElementById("myOrders")
+      .innerHTML =
+      "❌ Could not load orders.";
+
+    return;
+  }
+
+  const box =
+    document.getElementById("myOrders");
+
+  if(!data.length){
+
+    box.innerHTML =
+      "You have no orders yet.";
+
+    return;
+  }
+
+  box.innerHTML =
+    data.map(order => `
+
+      <div class="item">
+
+        <h3>
+          📦 Order #${order.id}
+        </h3>
+
+        <p>
+          💰 Total: $${order.total}
+        </p>
+
+        <p>
+          💳 Payment:
+          ${order.payment_status || "unpaid"}
+        </p>
+
+        <p>
+          📍 ${order.address}
+        </p>
+
+        <h3>
+          Status:
+          ${getOrderStatus(order.status)}
+        </h3>
+
+        <p>
+          ${new Date(order.created_at)
+            .toLocaleString()}
+        </p>
+
+      </div>
+
+    `).join("");
+}
+
+
+function getOrderStatus(status){
+
+  if(status === "confirmed")
+    return "✅ Confirmed";
+
+  if(status === "shipped")
+    return "🚚 Shipped";
+
+  if(status === "delivered")
+    return "🎉 Delivered";
+
+  if(status === "cancelled")
+    return "❌ Cancelled";
+
+  return "⏳ Pending";
+}document
+  .getElementById("ordersPage")
+  .classList.add("hidden");create table if not exists favorites (
+  id bigint generated always as identity primary key,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  product_id bigint not null references products(id) on delete cascade,
+  created_at timestamptz default now(),
+  unique(user_id, product_id)
+);
+
+alter table favorites enable row level security;
+
+create policy "Users can view own favorites"
+on favorites
+for select
+to authenticated
+using (user_id = auth.uid());
+
+create policy "Users can add favorites"
+on favorites
+for insert
+to authenticated
+with check (user_id = auth.uid());
+
+create policy "Users can remove own favorites"
+on favorites
+for delete
+to authenticated
+using (user_id = auth.uid());<section>
+
+  <h3>📂 Categories</h3>
+
+  <button onclick="filterCategory('all')">
+    All
+  </button>
+
+  <button onclick="filterCategory('Electronics')">
+    📱 Electronics
+  </button>
+
+  <button onclick="filterCategory('Fashion')">
+    👕 Fashion
+  </button>
+
+  <button onclick="filterCategory('Bags')">
+    🎒 Bags
+  </button>
+
+</section><button
+  class="full"
+  onclick="toggleFavorite(${p.id})">
+  ❤️ Favorite
+</button>async function toggleFavorite(productId){
+
+  if(!currentUser){
+
+    alert("Please login first.");
+    showAuth();
+    return;
+  }
+
+  const {data,error} =
+    await db
+      .from("favorites")
+      .select("id")
+      .eq("user_id",currentUser.id)
+      .eq("product_id",productId)
+      .maybeSingle();
+
+  if(error){
+
+    console.error(error);
+    return;
+  }
+
+  if(data){
+
+    await db
+      .from("favorites")
+      .delete()
+      .eq("id",data.id);
+
+    alert("💔 Removed from favorites.");
+
+  }else{
+
+    const {error:addError} =
+      await db
+        .from("favorites")
+        .insert({
+
+          user_id:currentUser.id,
+          product_id:productId
+
+        });
+
+    if(addError){
+
+      console.error(addError);
+      alert("Could not add favorite.");
+      return;
+    }
+
+    alert("❤️ Added to favorites!");
+  }
+}
+
+
+function filterCategory(category){
+
+  if(category === "all"){
+
+    showProducts(products);
+    return;
+  }
+
+  const result =
+    products.filter(
+      p => p.category === category
+    );
+
+  showProducts(result);
+}alter table messages replica identity full;
+
+alter publication supabase_realtime
+add table messages;let chatChannel = null;
+
+function startChatRealtime(){
+
+  if(!currentUser || !chatReceiver) return;
+
+  if(chatChannel){
+    db.removeChannel(chatChannel);
+  }
+
+  chatChannel =
+    db
+      .channel("chat-" + currentUser.id)
+      .on(
+        "postgres_changes",
+        {
+          event:"INSERT",
+          schema:"public",
+          table:"messages"
+        },
+        payload => {
+
+          const m = payload.new;
+
+          if(
+            (m.sender_id === currentUser.id &&
+             m.receiver_id === chatReceiver)
+
+            ||
+
+            (m.sender_id === chatReceiver &&
+             m.receiver_id === currentUser.id)
+          ){
+
+            loadMessages();
+
+            if(m.receiver_id === currentUser.id){
+              showNotification("💬 New message!");
+            }
+          }
+
+        }
+      )
+      .subscribe();
+}startChatRealtime();async function openChat(receiverId, productId){
+
+  if(!currentUser){
+    alert("Please login first.");
+    showAuth();
+    return;
+  }
+
+  chatReceiver = receiverId;
+  chatProduct = productId;
+
+  hideAll();
+
+  document
+    .getElementById("chatPage")
+    .classList.remove("hidden");
+
+  await loadMessages();
+
+  startChatRealtime();
+}function showNotification(message){
+
+  if("Notification" in window){
+
+    if(Notification.permission === "granted"){
+
+      new Notification(
+        "Carafadiya",
+        {
+          body:message
+        }
+      );
+
+    }else{
+
+      Notification.requestPermission();
+
+    }
+
+  }else{
+
+    alert(message);
+
+  }
+}alter table profiles
+add column if not exists store_name text;
+
+alter table profiles
+add column if not exists store_description text;
+
+alter table profiles
+add column if not exists store_phone text;<section id="sellerStorePage" class="hidden">
+
+  <button onclick="showShop()">← Shop</button>
+
+  <div id="sellerHeader"></div>
+
+  <h2>🛍️ Seller Products</h2>
+
+  <div id="sellerStoreProducts" class="products">
+    Loading...
+  </div>
+
+</section>async function openSellerStoreById(sellerId){
+
+  hideAll();
+
+  document
+    .getElementById("sellerStorePage")
+    .classList.remove("hidden");
+
+  const {data:seller,error} =
+    await db
+      .from("profiles")
+      .select("*")
+      .eq("id",sellerId)
+      .single();
+
+  if(error){
+
+    console.error(error);
+    return;
+  }
+
+  document
+    .getElementById("sellerHeader")
+    .innerHTML = `
+
+      <section>
+
+        <h1>
+          🏪 ${seller.store_name || seller.name}
+        </h1>
+
+        <p>
+          ${seller.store_description || "Welcome to our store."}
+        </p>
+
+        <p>
+          📞 ${seller.store_phone || "Contact seller through chat."}
+        </p>
+
+      </section>
+
+    `;
+
+  const {data:items,error:productError} =
+    await db
+      .from("products")
+      .select("*")
+      .eq("seller_id",sellerId)
+      .order("id",{ascending:false});
+
+  if(productError){
+
+    console.error(productError);
+    return;
+  }
+
+  document
+    .getElementById("sellerStoreProducts")
+    .innerHTML =
+    items.map(p => `
+
+      <div class="product">
+
+        <img
+          src="${p.image || 'https://via.placeholder.com/300'}"
+        >
+
+        <h3>${p.name}</h3>
+
+        <p>💰 $${p.price}</p>
+
+        <p>${p.category || ""}</p>
+
+        <button
+          class="full"
+          onclick="openProduct(${p.id})">
+          👀 View
+        </button>
+
+      </div>
+
+    `).join("");
+
+}<button
+  class="full"
+  onclick="openSellerStoreById('${product.seller_id}')">
+  🏪 Visit Seller Store
+</button>document
+  .getElementById("sellerStorePage")
+  .classList.add("hidden");<section>
+
+  <h3>🔎 Search & Filters</h3>
+
+  <input
+    id="search"
+    placeholder="Search products..."
+    oninput="applyFilters()"
+  >
+
+  <input
+    id="minPrice"
+    type="number"
+    placeholder="Minimum price"
+    oninput="applyFilters()"
+  >
+
+  <input
+    id="maxPrice"
+    type="number"
+    placeholder="Maximum price"
+    oninput="applyFilters()"
+  >
+
+  <select
+    id="categoryFilter"
+    onchange="applyFilters()">
+
+    <option value="all">
+      All Categories
+    </option>
+
+    <option value="Electronics">
+      Electronics
+    </option>
+
+    <option value="Fashion">
+      Fashion
+    </option>
+
+    <option value="Bags">
+      Bags
+    </option>
+
+  </select>
+
+  <select
+    id="sortFilter"
+    onchange="applyFilters()">
+
+    <option value="new">
+      Newest
+    </option>
+
+    <option value="low">
+      Price: Low → High
+    </option>
+
+    <option value="high">
+      Price: High → Low
+    </option>
+
+  </select>
+
+</section><section>
+
+  <h3>🔎 Search & Filters</h3>
+
+  <input
+    id="search"
+    placeholder="Search products..."
+    oninput="applyFilters()"
+  >
+
+  <input
+    id="minPrice"
+    type="number"
+    placeholder="Minimum price"
+    oninput="applyFilters()"
+  >
+
+  <input
+    id="maxPrice"
+    type="number"
+    placeholder="Maximum price"
+    oninput="applyFilters()"
+  >
+
+  <select
+    id="categoryFilter"
+    onchange="applyFilters()">
+
+    <option value="all">
+      All Categories
+    </option>
+
+    <option value="Electronics">
+      Electronics
+    </option>
+
+    <option value="Fashion">
+      Fashion
+    </option>
+
+    <option value="Bags">
+      Bags
+    </option>
+
+  </select>
+
+  <select
+    id="sortFilter"
+    onchange="applyFilters()">
+
+    <option value="new">
+      Newest
+    </option>
+
+    <option value="low">
+      Price: Low → High
+    </option>
+
+    <option value="high">
+      Price: High → Low
+    </option>
+
+  </select>
+
+</section>function applyFilters(){
+
+  const search =
+    document
+      .getElementById("search")
+      .value
+      .toLowerCase()
+      .trim();
+
+  const min =
+    Number(
+      document
+        .getElementById("minPrice")
+        .value
+    ) || 0;
+
+  const maxInput =
+    document
+      .getElementById("maxPrice")
+      .value;
+
+  const max =
+    maxInput === ""
+      ? Infinity
+      : Number(maxInput);
+
+  const category =
+    document
+      .getElementById("categoryFilter")
+      .value;
+
+  const sort =
+    document
+      .getElementById("sortFilter")
+      .value;
+
+  let result =
+    products.filter(p => {
+
+      const matchesSearch =
+        p.name
+          .toLowerCase()
+          .includes(search)
+
+        ||
+
+        (p.category || "")
+          .toLowerCase()
+          .includes(search)
+
+        ||
+
+        (p.seller || "")
+          .toLowerCase()
+          .includes(search);
+
+      const matchesPrice =
+        Number(p.price) >= min &&
+        Number(p.price) <= max;
+
+      const matchesCategory =
+        category === "all" ||
+        p.category === category;
+
+      return (
+        matchesSearch &&
+        matchesPrice &&
+        matchesCategory
+      );
+
+    });
+
+  if(sort === "low"){
+
+    result.sort(
+      (a,b) =>
+        Number(a.price) -
+        Number(b.price)
+    );
+
+  }
+
+  if(sort === "high"){
+
+    result.sort(
+      (a,b) =>
+        Number(b.price) -
+        Number(a.price)
+    );
+
+  }
+
+  if(sort === "new"){
+
+    result.sort(
+      (a,b) => b.id - a.id
+    );
+
+  }
+
+  showProducts(result);
+}<section id="cartPage" class="hidden">
+
+  <button onclick="showShop()">← Continue Shopping</button>
+
+  <h2>🛒 My Cart</h2>
+
+  <div id="cartItems"></div>
+
+  <div id="cartSummary"></div>
+
+  <button onclick="openCheckout()" class="full">
+    Proceed to Checkout
+  </button>
+
+</section>let cart = JSON.parse(
+  localStorage.getItem("carafadiya_cart") || "[]"
+);
+
+function saveCart(){
+
+  localStorage.setItem(
+    "carafadiya_cart",
+    JSON.stringify(cart)
+  );
+
+}
+
+function addToCart(productId){
+
+  const product =
+    products.find(p => p.id == productId);
+
+  if(!product) return;
+
+  const existing =
+    cart.find(item => item.id == productId);
+
+  if(existing){
+
+    existing.quantity++;
+
+  }else{
+
+    cart.push({
+      id: product.id,
+      name: product.name,
+      price: Number(product.price),
+      image: product.image,
+      quantity: 1
+    });
+
+  }
+
+  saveCart();
+  renderCart();
+
+  alert("Added to cart 🛒");
+
+}function changeQuantity(productId, change){
+
+  const item =
+    cart.find(p => p.id == productId);
+
+  if(!item) return;
+
+  item.quantity += change;
+
+  if(item.quantity <= 0){
+
+    cart =
+      cart.filter(p => p.id != productId);
+
+  }
+
+  saveCart();
+  renderCart();
+
+}function removeFromCart(productId){
+
+  cart =
+    cart.filter(p => p.id != productId);
+
+  saveCart();
+  renderCart();
+
+}function renderCart(){
+
+  const box =
+    document.getElementById("cartItems");
+
+  const summary =
+    document.getElementById("cartSummary");
+
+  if(cart.length === 0){
+
+    box.innerHTML = `
+      <h3>Your cart is empty 🛒</h3>
+    `;
+
+    summary.innerHTML = "";
+
+    return;
+  }
+
+  let subtotal = 0;
+
+  box.innerHTML =
+    cart.map(item => {
+
+      const itemTotal =
+        item.price * item.quantity;
+
+      subtotal += itemTotal;
+
+      return `
+
+        <div class="cart-item">
+
+          <img
+            src="${item.image || ''}"
+            width="80"
+          >
+
+          <div>
+
+            <h3>${item.name}</h3>
+
+            <p>
+              $${item.price} ×
+              ${item.quantity}
+            </p>
+
+            <button
+              onclick="changeQuantity(${item.id},-1)">
+              −
+            </button>
+
+            <button
+              onclick="changeQuantity(${item.id},1)">
+              +
+            </button>
+
+            <button
+              onclick="removeFromCart(${item.id})">
+              🗑️
+            </button>
+
+            <p>
+              Total: $${itemTotal.toFixed(2)}
+            </p>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+  const deliveryFee =
+    subtotal >= 100 ? 0 : 5;
+
+  const total =
+    subtotal + deliveryFee;
+
+  summary.innerHTML = `
+
+    <hr>
+
+    <p>
+      Subtotal:
+      <strong>$${subtotal.toFixed(2)}</strong>
+    </p>
+
+    <p>
+      Delivery:
+      <strong>
+        ${deliveryFee === 0
+          ? "FREE"
+          : "$" + deliveryFee.toFixed(2)}
+      </strong>
+    </p>
+
+    <h2>
+      Total: $${total.toFixed(2)}
+    </h2>
+
+  `;
+
+}function showCart(){
+
+  hideAll();
+
+  document
+    .getElementById("cartPage")
+    .classList
+    .remove("hidden");
+
+  renderCart();
+
+}<section id="ordersPage" class="hidden">
+
+  <button onclick="showShop()">
+    ← Shop
+  </button>
+
+  <h2>📦 My Orders</h2>
+
+  <div id="myOrders">
+    Loading orders...
+  </div>
+
+</section>function getOrderProgress(status){
+
+  const steps = [
+    "pending",
+    "confirmed",
+    "shipped",
+    "delivered"
+  ];
+
+  const current =
+    steps.indexOf(status);
+
+  return steps.map((step,index) => {
+
+    let icon = "⚪";
+
+    if(index < current){
+      icon = "✅";
+    }
+
+    if(index === current){
+      icon = "🔵";
+    }
+
+    const names = {
+      pending: "Pending",
+      confirmed: "Confirmed",
+      shipped: "Shipped",
+      delivered: "Delivered"
+    };
+
+    return `
+      <div class="order-step">
+        <span>${icon}</span>
+        <strong>${names[step]}</strong>
+      </div>
+    `;
+
+  }).join("");
+}async function loadMyOrders(){
+
+  const box =
+    document.getElementById("myOrders");
+
+  box.innerHTML = "Loading...";
+
+  const {
+    data: { user }
+  } = await db.auth.getUser();
+
+  if(!user){
+
+    box.innerHTML =
+      "<p>Please login first.</p>";
+
+    return;
+  }
+
+  const {data,error} =
+    await db
+      .from("orders")
+      .select("*")
+      .eq("customer_id",user.id)
+      .order("created_at",{ascending:false});
+
+  if(error){
+
+    console.error(error);
+
+    box.innerHTML =
+      "<p>Could not load orders.</p>";
+
+    return;
+  }
+
+  if(!data.length){
+
+    box.innerHTML =
+      "<p>You have no orders yet 📦</p>";
+
+    return;
+  }
+
+  box.innerHTML =
+    data.map(order => `
+
+      <div class="order-card">
+
+        <h3>
+          Order #${order.id}
+        </h3>
+
+        <p>
+          💰 Total:
+          $${Number(order.total).toFixed(2)}
+        </p>
+
+        <p>
+          💳 Payment:
+          ${order.payment_method || "cash"}
+        </p>
+
+        <p>
+          📅
+          ${new Date(order.created_at)
+            .toLocaleDateString()}
+        </p>
+
+        <h4>
+          Status:
+          ${(order.status || "pending")
+            .toUpperCase()}
+        </h4>
+
+        <div class="order-progress">
+
+          ${getOrderProgress(
+            order.status || "pending"
+          )}
+
+        </div>
+
+      </div>
+
+    `).join("");
+
+}.order-card{
+
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:15px;
+  margin:15px 0;
+
+}
+
+.order-progress{
+
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  margin-top:20px;
+  font-size:12px;
+
+}
+
+.order-step{
+
+  text-align:center;
+  flex:1;
+
+}
+
+.order-step span{
+
+  display:block;
+  font-size:22px;
+  margin-bottom:5px;
+
+}create table if not exists notifications (
+  id bigint generated always as identity primary key,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  title text not null,
+  message text not null,
+  type text default 'general',
+  is_read boolean default false,
+  created_at timestamptz default now()
+);
+
+alter table notifications enable row level security;
+
+create policy "Users can view own notifications"
+on notifications
+for select
+to authenticated
+using (user_id = auth.uid());
+
+create policy "Users can update own notifications"
+on notifications
+for update
+to authenticated
+using (user_id = auth.uid())
+with check (user_id = auth.uid());<section id="notificationsPage" class="hidden">
+
+  <button onclick="showShop()">
+    ← Shop
+  </button>
+
+  <h2>🔔 Notifications</h2>
+
+  <button onclick="markAllNotificationsRead()">
+    Mark all as read
+  </button>
+
+  <div id="notificationsList">
+    Loading...
+  </div>
+
+</section><button onclick="showNotifications()">
+  🔔 Notifications
+  <span id="notificationCount">0</span>
+</button>async function showNotifications(){
+
+  hideAll();
+
+  document
+    .getElementById("notificationsPage")
+    .classList
+    .remove("hidden");
+
+  await loadNotifications();
+
+}async function loadNotifications(){
+
+  const box =
+    document.getElementById("notificationsList");
+
+  const {
+    data: { user }
+  } = await db.auth.getUser();
+
+  if(!user){
+
+    box.innerHTML =
+      "<p>Please login first.</p>";
+
+    return;
+  }
+
+  const {data,error} =
+    await db
+      .from("notifications")
+      .select("*")
+      .eq("user_id",user.id)
+      .order("created_at",{ascending:false});
+
+  if(error){
+
+    console.error(error);
+
+    box.innerHTML =
+      "<p>Could not load notifications.</p>";
+
+    return;
+  }
+
+  const unread =
+    data.filter(n => !n.is_read).length;
+
+  document
+    .getElementById("notificationCount")
+    .textContent = unread;
+
+  if(!data.length){
+
+    box.innerHTML =
+      "<p>No notifications 🔔</p>";
+
+    return;
+  }
+
+  box.innerHTML =
+    data.map(n => `
+
+      <div class="notification ${
+        n.is_read ? "read" : "unread"
+      }">
+
+        <h3>${n.title}</h3>
+
+        <p>${n.message}</p>
+
+        <small>
+          ${new Date(n.created_at)
+            .toLocaleString()}
+        </small>
+
+      </div>
+
+    `).join("");
+
+}async function markAllNotificationsRead(){
+
+  const {
+    data: { user }
+  } = await db.auth.getUser();
+
+  if(!user) return;
+
+  const {error} =
+    await db
+      .from("notifications")
+      .update({is_read:true})
+      .eq("user_id",user.id)
+      .eq("is_read",false);
+
+  if(error){
+
+    console.error(error);
+    return;
+
+  }
+
+  loadNotifications();
+
+}.notification{
+
+  padding:15px;
+  margin:10px 0;
+  border-radius:12px;
+  border:1px solid #ddd;
+
+}
+
+.notification.unread{
+
+  font-weight:bold;
+
+}
+
+.notification.read{
+
+  opacity:0.65;
+
+}await db
+  .from("notifications")
+  .insert({
+    user_id: user.id,
+    title: "Order Received 📦",
+    message: "Your order has been received successfully.",
+    type: "order"
+  });create policy "Admins can create notifications"
+on notifications
+for insert
+to authenticated
+with check (public.is_admin());async function sendOrderNotification(
+  customerId,
+  orderId,
+  status
+){
+
+  const messages = {
+
+    confirmed: {
+      title: "Order Confirmed ✅",
+      message:
+        `Your order #${orderId} has been confirmed.`
+    },
+
+    shipped: {
+      title: "Order Shipped 📦",
+      message:
+        `Your order #${orderId} has been shipped.`
+    },
+
+    delivered: {
+      title: "Order Delivered 🏠",
+      message:
+        `Your order #${orderId} has been delivered.`
+    },
+
+    cancelled: {
+      title: "Order Cancelled ❌",
+      message:
+        `Your order #${orderId} has been cancelled.`
+    }
+
+  };
+
+  const notification =
+    messages[status];
+
+  if(!notification) return;
+
+  const {error} =
+    await db
+      .from("notifications")
+      .insert({
+
+        user_id: customerId,
+
+        title:
+          notification.title,
+
+        message:
+          notification.message,
+
+        type: "order"
+
+      });
+
+  if(error){
+
+    console.error(
+      "Notification error:",
+      error
+    );
+
+  }
+
+}async function updateOrderStatus(
+  orderId,
+  status,
+  customerId
+){
+
+  const {error} =
+    await db
+      .from("orders")
+      .update({
+        status: status
+      })
+      .eq("id",orderId);
+
+  if(error){
+
+    alert("Could not update order.");
+    console.error(error);
+    return;
+
+  }
+
+  await sendOrderNotification(
+    customerId,
+    orderId,
+    status
+  );
+
+  alert("Order updated ✅");
+
+  loadAdminOrders();
+
+}<button
+  onclick="updateOrderStatus(
+    ${order.id},
+    'confirmed',
+    '${order.customer_id}'
+  )">
+  ✅ Confirm
+</button>
+
+<button
+  onclick="updateOrderStatus(
+    ${order.id},
+    'shipped',
+    '${order.customer_id}'
+  )">
+  📦 Ship
+</button>
+
+<button
+  onclick="updateOrderStatus(
+    ${order.id},
+    'delivered',
+    '${order.customer_id}'
+  )">
+  🏠 Deliver
+</button>
+
+<button
+  onclick="updateOrderStatus(
+    ${order.id},
+    'cancelled',
+    '${order.customer_id}'
+  )">
+  ❌ Cancel
+</button>drop policy if exists "Anyone can view products" on products;
+
+create policy "Public can view products"
+on products
+for select
+to anon, authenticated
+using (true);
+
+create policy "Sellers can add own products"
+on products
+for insert
+to authenticated
+with check (
+  public.is_seller()
+  and seller_id = auth.uid()
+);
+
+create policy "Sellers can update own products"
+on products
+for update
+to authenticated
+using (
+  public.is_seller()
+  and seller_id = auth.uid()
+)
+with check (
+  public.is_seller()
+  and seller_id = auth.uid()
+);
+
+create policy "Sellers can delete own products"
+on products
+for delete
+to authenticated
+using (
+  public.is_seller()
+  and seller_id = auth.uid()
+);drop policy if exists "Users can view own orders" on orders;
+drop policy if exists "Admins can view all orders" on orders;
+
+create policy "Customers can view own orders"
+on orders
+for select
+to authenticated
+using (
+  customer_id = auth.uid()
+  or public.is_admin()
+);drop policy if exists "Customers can create own orders" on orders;
+
+create policy "Customers can create own orders"
+on orders
+for insert
+to authenticated
+with check (
+  customer_id = auth.uid()
+);drop policy if exists "Admins can update orders" on orders;
+
+create policy "Admins can update orders"
+on orders
+for update
+to authenticated
+using (
+  public.is_admin()
+)
+with check (
+  public.is_admin()
+);drop policy if exists "Users can read their messages" on messages;
+
+create policy "Users can read their messages"
+on messages
+for select
+to authenticated
+using (
+  sender_id = auth.uid()
+  or receiver_id = auth.uid()
+);drop policy if exists "Users can send messages" on messages;
+
+create policy "Users can send messages"
+on messages
+for insert
+to authenticated
+with check (
+  sender_id = auth.uid()
+);drop policy if exists "Users can view own favorites" on favorites;
+
+create policy "Users can view own favorites"
+on favorites
+for select
+to authenticated
+using (
+  user_id = auth.uid()
+);
+
+drop policy if exists "Users can add favorites" on favorites;
+
+create policy "Users can add favorites"
+on favorites
+for insert
+to authenticated
+with check (
+  user_id = auth.uid()
+);
+
+drop policy if exists "Users can remove own favorites" on favorites;
+
+create policy "Users can remove own favorites"
+on favorites
+for delete
+to authenticated
+using (
+  user_id = auth.uid()
+);const SUPABASE_URL = "YOUR_SUPABASE_URL";
+
+const SUPABASE_KEY = "YOUR_PUBLISHABLE_KEY";Customer 🔵
+   ↓
+Own Orders / Chat / Favorites
+
+Seller 🟢
+   ↓
+Own Products / Store
+
+Admin 🔴
+   ↓
+Users / Orders / Management<section id="sellerDashboard" class="hidden">
+
+  <button onclick="showShop()">← Shop</button>
+
+  <h2>🏪 Seller Dashboard</h2>
+
+  <div class="stats">
+
+    <div>
+      <h3>📦 Products</h3>
+      <strong id="sellerProductCount">0</strong>
+    </div>
+
+    <div>
+      <h3>🛒 Orders</h3>
+      <strong id="sellerOrderCount">0</strong>
+    </div>
+
+    <div>
+      <h3>💰 Sales</h3>
+      <strong id="sellerSales">$0</strong>
+    </div>
+
+  </div>
+
+  <h3>📦 My Products</h3>
+
+  <div id="sellerProducts">
+    Loading...
+  </div>
+
+  <h3>🛒 My Orders</h3>
+
+  <div id="sellerOrders">
+    Loading...
+  </div>
+
+</section>async function showSellerDashboard(){
+
+  hideAll();
+
+  document
+    .getElementById("sellerDashboard")
+    .classList
+    .remove("hidden");
+
+  await loadSellerDashboard();
+
+}async function loadSellerDashboard(){
+
+  const {
+    data: { user }
+  } = await db.auth.getUser();
+
+  if(!user){
+    alert("Please login first.");
+    return;
+  }
+
+  const {data:products,error} =
+    await db
+      .from("products")
+      .select("*")
+      .eq("seller_id",user.id);
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  document
+    .getElementById("sellerProductCount")
+    .textContent = products.length;
+
+  document
+    .getElementById("sellerProducts")
+    .innerHTML =
+      products.map(p => `
+
+        <div class="product">
+
+          <img
+            src="${p.image || ''}"
+            width="100"
+          >
+
+          <h3>${p.name}</h3>
+
+          <p>$${p.price}</p>
+
+          <button
+            onclick="openProduct(${p.id})">
+            👀 View
+          </button>
+
+        </div>
+
+      `).join("");
+
+  await loadSellerOrders(user.id);
+
+}async function loadSellerOrders(sellerId){
+
+  const box =
+    document.getElementById("sellerOrders");
+
+  const {data:orders,error} =
+    await db
+      .from("orders")
+      .select("*")
+      .order("created_at",{ascending:false});
+
+  if(error){
+
+    console.error(error);
+
+    box.innerHTML =
+      "<p>Could not load orders.</p>";
+
+    return;
+
+  }
+
+  let count = 0;
+  let sales = 0;
+
+  const sellerOrders = [];
+
+  orders.forEach(order => {
+
+    const items =
+      Array.isArray(order.items)
+        ? order.items
+        : [];
+
+    const sellerItems =
+      items.filter(
+        item => item.seller_id == sellerId
+      );
+
+    if(sellerItems.length){
+
+      let orderTotal = 0;
+
+      sellerItems.forEach(item => {
+
+        orderTotal +=
+          Number(item.price) *
+          Number(item.quantity || 1);
+
+      });
+
+      count++;
+      sales += orderTotal;
+
+      sellerOrders.push({
+        ...order,
+        sellerTotal: orderTotal
+      });
+
+    }
+
+  });
+
+  document
+    .getElementById("sellerOrderCount")
+    .textContent = count;
+
+  document
+    .getElementById("sellerSales")
+    .textContent =
+      "$" + sales.toFixed(2);
+
+  if(!sellerOrders.length){
+
+    box.innerHTML =
+      "<p>No seller orders yet.</p>";
+
+    return;
+
+  }
+
+  box.innerHTML =
+    sellerOrders.map(order => `
+
+      <div class="order-card">
+
+        <h3>
+          Order #${order.id}
+        </h3>
+
+        <p>
+          💰 Seller total:
+          $${order.sellerTotal.toFixed(2)}
+        </p>
+
+        <p>
+          📦 Status:
+          ${order.status || "pending"}
+        </p>
+
+        <small>
+          ${new Date(order.created_at)
+            .toLocaleString()}
+        </small>
+
+      </div>
+
+    `).join("");
+
+}{
+  id: product.id,
+  name: product.name,
+  price: product.price,
+  quantity: quantity,
+  seller_id: product.seller_id
+}.stats{
+
+  display:grid;
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:12px;
+  margin:20px 0;
+
+}
+
+.stats > div{
+
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:15px;
+  text-align:center;
+
+}
+
+.stats strong{
+
+  font-size:24px;
+
+}<div class="analytics">
+
+  <h2>📊 Store Analytics</h2>
+
+  <div class="stats">
+
+    <div>
+      <h3>💰 Revenue</h3>
+      <strong id="analyticsRevenue">$0</strong>
+    </div>
+
+    <div>
+      <h3>📦 Units Sold</h3>
+      <strong id="analyticsUnits">0</strong>
+    </div>
+
+    <div>
+      <h3>🏆 Best Product</h3>
+      <strong id="analyticsBestProduct">-</strong>
+    </div>
+
+  </div>
+
+  <h3>📅 Sales</h3>
+
+  <div id="salesChart"></div>
+
+</div>async function loadSellerAnalytics(sellerId){
+
+  const {data:orders,error} =
+    await db
+      .from("orders")
+      .select("*")
+      .order("created_at",{ascending:true});
+
+  if(error){
+
+    console.error(error);
+    return;
+
+  }
+
+  let revenue = 0;
+  let units = 0;
+  let productSales = {};
+
+  const dailySales = {};
+
+  orders.forEach(order => {
+
+    const items =
+      Array.isArray(order.items)
+        ? order.items
+        : [];
+
+    items.forEach(item => {
+
+      if(item.seller_id != sellerId)
+        return;
+
+      const quantity =
+        Number(item.quantity || 1);
+
+      const price =
+        Number(item.price || 0);
+
+      const total =
+        quantity * price;
+
+      revenue += total;
+      units += quantity;
+
+      productSales[item.name] =
+        (productSales[item.name] || 0)
+        + quantity;
+
+      const date =
+        new Date(order.created_at)
+        .toLocaleDateString();
+
+      dailySales[date] =
+        (dailySales[date] || 0)
+        + total;
+
+    });
+
+  });
+
+  let bestProduct = "-";
+  let bestQuantity = 0;
+
+  Object.entries(productSales)
+    .forEach(([name,quantity]) => {
+
+      if(quantity > bestQuantity){
+
+        bestProduct = name;
+        bestQuantity = quantity;
+
+      }
+
+    });
+
+  document
+    .getElementById("analyticsRevenue")
+    .textContent =
+      "$" + revenue.toFixed(2);
+
+  document
+    .getElementById("analyticsUnits")
+    .textContent =
+      units;
+
+  document
+    .getElementById("analyticsBestProduct")
+    .textContent =
+      bestProduct;
+
+  drawSalesChart(dailySales);
+
+}function drawSalesChart(data){
+
+  const box =
+    document.getElementById("salesChart");
+
+  const dates =
+    Object.keys(data);
+
+  if(!dates.length){
+
+    box.innerHTML =
+      "<p>No sales data yet.</p>";
+
+    return;
+
+  }
+
+  box.innerHTML =
+    dates.map(date => `
+
+      <div class="sales-row">
+
+        <span>
+          ${date}
+        </span>
+
+        <strong>
+          $${Number(data[date]).toFixed(2)}
+        </strong>
+
+      </div>
+
+    `).join("");
+
+}await loadSellerAnalytics(user.id);await loadSellerOrders(user.id);
+
+await loadSellerAnalytics(user.id);.sales-row{
+
+  display:flex;
+  justify-content:space-between;
+
+  padding:12px;
+
+  border-bottom:1px solid #ddd;
+
+}
+<div class="analytics">
+
+  <h2>📊 Seller Analytics</h2>
+
+  <div class="stats">
+
+    <div>
+      <h3>💰 Revenue</h3>
+      <strong id="analyticsRevenue">$0</strong>
+    </div>
+
+    <div>
+      <h3>📦 Orders</h3>
+      <strong id="analyticsOrders">0</strong>
+    </div>
+
+    <div>
+      <h3>🛍️ Units Sold</h3>
+      <strong id="analyticsUnits">0</strong>
+    </div>
+
+  </div>
+
+  <h3>🏆 Best Selling Products</h3>
+
+  <div id="bestProducts">
+    Loading...
+  </div>
+
+</div>
+async function loadSellerAnalytics(sellerId) {
+
+  const { data: orders, error } = await db
+    .from("orders")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  let revenue = 0;
+  let units = 0;
+  let orderCount = 0;
+
+  const productSales = {};
+
+  orders.forEach(order => {
+
+    const items = Array.isArray(order.items)
+      ? order.items
+      : [];
+
+    let sellerOrder = false;
+
+    items.forEach(item => {
+
+      if (item.seller_id != sellerId) return;
+
+      sellerOrder = true;
+
+      const quantity =
+        Number(item.quantity || 1);
+
+      const price =
+        Number(item.price || 0);
+
+      revenue += quantity * price;
+      units += quantity;
+
+      productSales[item.name] =
+        (productSales[item.name] || 0) + quantity;
+
+    });
+
+    if (sellerOrder) {
+      orderCount++;
+    }
+
+  });
+
+  document.getElementById(
+    "analyticsRevenue"
+  ).textContent =
+    "$" + revenue.toFixed(2);
+
+  document.getElementById(
+    "analyticsOrders"
+  ).textContent =
+    orderCount;
+
+  document.getElementById(
+    "analyticsUnits"
+  ).textContent =
+    units;
+
+  showBestProducts(productSales);
+}
+function showBestProducts(productSales) {
+
+  const box =
+    document.getElementById("bestProducts");
+
+  const products =
+    Object.entries(productSales)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5);
+
+  if (!products.length) {
+
+    box.innerHTML =
+      "<p>No sales yet 📦</p>";
+
+    return;
+  }
+
+  box.innerHTML =
+    products.map((item, index) => `
+
+      <div class="sales-row">
+
+        <strong>
+          ${index + 1}. ${item[0]}
+        </strong>
+
+        <span>
+          ${item[1]} sold
+        </span>
+
+      </div>
+
+    `).join("");
+}
+await loadSellerAnalytics(user.id);
+alter table profiles
+add column if not exists store_name text;
+
+alter table profiles
+add column if not exists store_description text;
+
+alter table profiles
+add column if not exists store_phone text;
+<h2>⚙️ Store Settings</h2>
+
+<input
+  id="storeName"
+  placeholder="Store name"
+>
+
+<textarea
+  id="storeDescription"
+  placeholder="Store description">
+</textarea>
+
+<input
+  id="storePhone"
+  placeholder="Phone number"
+>
+
+<button onclick="saveStoreSettings()">
+  💾 Save Store
+</button>
+async function loadStoreSettings(){
+
+  const {
+    data: { user }
+  } = await db.auth.getUser();
+
+  if(!user) return;
+
+  const {data,error} =
+    await db
+      .from("profiles")
+      .select("store_name,store_description,store_phone")
+      .eq("id",user.id)
+      .single();
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  document.getElementById("storeName").value =
+    data.store_name || "";
+
+  document.getElementById("storeDescription").value =
+    data.store_description || "";
+
+  document.getElementById("storePhone").value =
+    data.store_phone || "";
+}
+async function saveStoreSettings(){
+
+  const {
+    data: { user }
+  } = await db.auth.getUser();
+
+  if(!user){
+
+    alert("Please login first.");
+    return;
+
+  }
+
+  const storeName =
+    document.getElementById("storeName").value.trim();
+
+  const description =
+    document.getElementById("storeDescription").value.trim();
+
+  const phone =
+    document.getElementById("storePhone").value.trim();
+
+  const {error} =
+    await db
+      .from("profiles")
+      .update({
+
+        store_name: storeName,
+        store_description: description,
+        store_phone: phone
+
+      })
+      .eq("id",user.id);
+
+  if(error){
+
+    console.error(error);
+    alert("Could not save.");
+    return;
+
+  }
+
+  alert("Store updated successfully ✅");
+
+}
+await loadStoreSettings();
+alter table profiles
+add column if not exists seller_approved boolean default false;
+<div id="sellerApprovalStatus"></div>async function checkSellerApproval(){
+
+  const {
+    data: { user }
+  } = await db.auth.getUser();
+
+  if(!user) return;
+
+  const {data,error} =
+    await db
+      .from("profiles")
+      .select("role,seller_approved")
+      .eq("id",user.id)
+      .single();
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  const box =
+    document.getElementById(
+      "sellerApprovalStatus"
+    );
+
+  if(data.role !== "seller"){
+
+    box.innerHTML =
+      "You are a customer.";
+
+    return;
+  }
+
+  if(data.seller_approved){
+
+    box.innerHTML =
+      "🟢 Seller approved";
+
+  }else{
+
+    box.innerHTML =
+      "🟡 Waiting for admin approval";
+
+  }
+
+}const {
+  data: { user }
+} = await db.auth.getUser();
+
+const {data:profile} =
+  await db
+    .from("profiles")
+    .select("role,seller_approved")
+    .eq("id",user.id)
+    .single();
+
+if(
+  profile.role !== "seller" ||
+  !profile.seller_approved
+){
+
+  alert(
+    "Your seller account is not approved yet."
+  );
+
+  return;
+}async function approveSeller(userId){
+
+  const {error} =
+    await db
+      .from("profiles")
+      .update({
+        seller_approved:true
+      })
+      .eq("id",userId);
+
+  if(error){
+
+    console.error(error);
+    alert("Approval failed.");
+    return;
+
+  }
+
+  alert("Seller approved ✅");
+
+}Customer
+   ↓
+Requests Seller
+   ↓
+🟡 Waiting
+   ↓
+Admin reviews
+   ↓
+✅ Approved
+   ↓
+Seller can add productscreate table if not exists seller_applications (
+  id bigint generated always as identity primary key,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  store_name text not null,
+  description text,
+  phone text,
+  status text not null default 'pending',
+  created_at timestamptz default now()
+);
+
+alter table seller_applications enable row level security;
+
+create policy "Users can create own seller application"
+on seller_applications
+for insert
+to authenticated
+with check (
+  user_id = auth.uid()
+);
+
+create policy "Users can view own seller application"
+on seller_applications
+for select
+to authenticated
+using (
+  user_id = auth.uid()
+);
+
+create policy "Admins can view applications"
+on seller_applications
+for select
+to authenticated
+using (
+  public.is_admin()
+);
+
+create policy "Admins can update applications"
+on seller_applications
+for update
+to authenticated
+using (
+  public.is_admin()
+)
+with check (
+  public.is_admin()
+);<section id="sellerApplicationPage" class="hidden">
+
+  <button onclick="showShop()">
+    ← Shop
+  </button>
+
+  <h2>🏪 Become a Seller</h2>
+
+  <input
+    id="applicationStoreName"
+    placeholder="Store name"
+  >
+
+  <textarea
+    id="applicationDescription"
+    placeholder="Tell us about your store">
+  </textarea>
+
+  <input
+    id="applicationPhone"
+    placeholder="Phone number"
+  >
+
+  <button onclick="submitSellerApplication()">
+    📤 Submit Application
+  </button>
+
+  <div id="applicationResult"></div>
+
+</section>async function submitSellerApplication(){
+
+  const {
+    data: { user }
+  } = await db.auth.getUser();
+
+  if(!user){
+
+    alert("Please login first.");
+    return;
+
+  }
+
+  const storeName =
+    document
+      .getElementById("applicationStoreName")
+      .value.trim();
+
+  const description =
+    document
+      .getElementById("applicationDescription")
+      .value.trim();
+
+  const phone =
+    document
+      .getElementById("applicationPhone")
+      .value.trim();
+
+  if(!storeName){
+
+    alert("Enter your store name.");
+    return;
+
+  }
+
+  const {error} =
+    await db
+      .from("seller_applications")
+      .insert({
+
+        user_id:user.id,
+        store_name:storeName,
+        description:description,
+        phone:phone
+
+      });
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "Application could not be submitted."
+    );
+
+    return;
+
+  }
+
+  document
+    .getElementById("applicationResult")
+    .innerHTML =
+      "🟡 Application submitted. Waiting for Admin.";
+
+}function showSellerApplication(){
+
+  hideAll();
+
+  document
+    .getElementById("sellerApplicationPage")
+    .classList
+    .remove("hidden");
+
+}<button onclick="showSellerApplication()">
+  🏪 Become a Seller
+</button>async function approveSellerApplication(application){
+
+  const {error} =
+    await db
+      .from("seller_applications")
+      .update({
+        status:"approved"
+      })
+      .eq("id",application.id);
+
+  if(error){
+
+    console.error(error);
+    return;
+
+  }
+
+  await db
+    .from("profiles")
+    .update({
+
+      role:"seller",
+      seller_approved:true,
+      store_name:application.store_name,
+      store_description:application.description,
+      store_phone:application.phone
+
+    })
+    .eq("id",application.user_id);
+
+  await db
+    .from("notifications")
+    .insert({
+
+      user_id:application.user_id,
+      title:"Seller Approved 🎉",
+      message:
+        "Your seller application has been approved.",
+      type:"seller"
+
+    });
+
+}👤 Customer
+      ↓
+🏪 Become a Seller
+      ↓
+📤 Application
+      ↓
+🟡 Pending
+      ↓
+👨‍💼 Admin
+   ↙       ↘
+✅ Approve   ❌ Reject
+      ↓
+🏪 Sellercreate or replace function public.is_approved_seller()
+returns boolean
+language sql
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.profiles
+    where id = auth.uid()
+      and role = 'seller'
+      and seller_approved = true
+  );
+$$;
+
+grant execute on function public.is_approved_seller()
+to authenticated;drop policy if exists "Sellers can add products" on products;
+drop policy if exists "Sellers can delete own products" on products;
+drop policy if exists "Sellers can update own products" on products;
+
+create policy "Approved sellers can add products"
+on products
+for insert
+to authenticated
+with check (
+  public.is_approved_seller()
+  and seller_id = auth.uid()
+);
+
+create policy "Approved sellers can delete own products"
+on products
+for delete
+to authenticated
+using (
+  public.is_approved_seller()
+  and seller_id = auth.uid()
+);
+
+create policy "Approved sellers can update own products"
+on products
+for update
+to authenticated
+using (
+  public.is_approved_seller()
+  and seller_id = auth.uid()
+)
+with check (
+  public.is_approved_seller()
+  and seller_id = auth.uid()
+);<section id="adminSellersPage" class="hidden">
+
+  <button onclick="showShop()">← Shop</button>
+
+  <h2>👥 Seller Management</h2>
+
+  <div id="sellerApplications">
+    Loading...
+  </div>
+
+</section>async function showAdminSellers() {
+  hideAll();
+
+  const page = document.getElementById("adminSellersPage");
+
+  if (!page) return;
+
+  page.classList.remove("hidden");
+
+  await loadSellerApplications();
+}
+
+
+async function loadSellerApplications() {
+
+  const { data: { user } } = await db.auth.getUser();
+
+  if (!user) {
+    alert("Please login first.");
+    return;
+  }
+
+  const { data: profile } = await db
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile || profile.role !== "admin") {
+    alert("Admin only.");
+    return;
+  }
+
+  const { data, error } = await db
+    .from("seller_applications")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+    document.getElementById("sellerApplications").innerHTML =
+      "<p>Could not load applications.</p>";
+    return;
+  }
+
+  const box = document.getElementById("sellerApplications");
+
+  if (!data.length) {
+    box.innerHTML = "<p>No seller applications yet.</p>";
+    return;
+  }
+
+  box.innerHTML = data.map(application => `
+    <div class="seller-application"
+         style="border:1px solid #ddd;padding:15px;margin:10px 0;border-radius:10px;">
+
+      <h3>🏪 ${application.store_name}</h3>
+
+      <p>${application.description || "No description"}</p>
+
+      <p>📞 ${application.phone || "No phone"}</p>
+
+      <p>
+        Status:
+        <strong>${application.status}</strong>
+      </p>
+
+      ${
+        application.status === "pending"
+        ? `
+          <button onclick='approveSellerApplication(${JSON.stringify(application)})'>
+            ✅ Approve
+          </button>
+
+          <button onclick="rejectSellerApplication(
+            ${application.id},
+            '${application.user_id}'
+          )">
+            ❌ Reject
+          </button>
+        `
+        : ""
+      }
+
+    </div>
+  `).join("");
+}async function approveSellerApplication(application) {
+
+  const { error } = await db
+    .from("seller_applications")
+    .update({
+      status: "approved"
+    })
+    .eq("id", application.id);
+
+  if (error) {
+    console.error(error);
+    alert("Approval failed.");
+    return;
+  }
+
+  const { error: profileError } = await db
+    .from("profiles")
+    .update({
+      role: "seller",
+      seller_approved: true,
+      store_name: application.store_name,
+      store_description: application.description,
+      store_phone: application.phone
+    })
+    .eq("id", application.user_id);
+
+  if (profileError) {
+    console.error(profileError);
+    alert("Seller profile update failed.");
+    return;
+  }
+
+  await db.from("notifications").insert({
+    user_id: application.user_id,
+    title: "Seller Approved 🎉",
+    message: "Your seller application has been approved.",
+    type: "seller"
+  });
+
+  alert("Seller approved ✅");
+
+  await loadSellerApplications();
+}async function rejectSellerApplication(applicationId, userId) {
+
+  const { error } = await db
+    .from("seller_applications")
+    .update({
+      status: "rejected"
+    })
+    .eq("id", applicationId);
+
+  if (error) {
+    console.error(error);
+    alert("Rejection failed.");
+    return;
+  }
+
+  await db.from("notifications").insert({
+    user_id: userId,
+    title: "Seller Application Rejected",
+    message: "Your seller application was not approved.",
+    type: "seller"
+  });
+
+  alert("Application rejected ❌");
+
+  await loadSellerApplications();
+}<button onclick="showAdminSellers()">
+  👥 Seller Management
+</button>create table if not exists seller_stores (
+  id uuid primary key references auth.users(id) on delete cascade,
+  store_name text not null,
+  description text,
+  logo_url text,
+  created_at timestamptz default now()
+);
+
+alter table seller_stores enable row level security;
+
+create policy "Anyone can view seller stores"
+on seller_stores
+for select
+to anon, authenticated
+using (true);
+
+create policy "Sellers can create own store"
+on seller_stores
+for insert
+to authenticated
+with check (
+  id = auth.uid()
+  and public.is_approved_seller()
+);
+
+create policy "Sellers can update own store"
+on seller_stores
+for update
+to authenticated
+using (
+  id = auth.uid()
+  and public.is_approved_seller()
+)
+with check (
+  id = auth.uid()
+  and public.is_approved_seller()
+);<section id="sellerStorePage" class="hidden">
+
+  <button onclick="showShop()">← Shop</button>
+
+  <div id="sellerStoreInfo">
+    Loading store...
+  </div>
+
+  <h2>🛍️ Store Products</h2>
+
+  <div id="sellerStoreProducts">
+    Loading products...
+  </div>
+
+</section>async function openSellerStore(sellerId) {
+
+  hideAll();
+
+  document
+    .getElementById("sellerStorePage")
+    .classList.remove("hidden");
+
+  const info = document.getElementById("sellerStoreInfo");
+  const productBox = document.getElementById("sellerStoreProducts");
+
+  info.innerHTML = "Loading store...";
+  productBox.innerHTML = "Loading products...";
+
+  // Get store
+  const { data: store, error: storeError } = await db
+    .from("seller_stores")
+    .select("*")
+    .eq("id", sellerId)
+    .single();
+
+  if (storeError) {
+    console.error(storeError);
+    info.innerHTML = "<p>Store not found.</p>";
+    return;
+  }
+
+  info.innerHTML = `
+    <div style="
+      padding:20px;
+      border:1px solid #ddd;
+      border-radius:12px;
+      margin-bottom:20px;
+    ">
+
+      ${
+        store.logo_url
+        ? `<img src="${store.logo_url}"
+                style="width:90px;height:90px;object-fit:cover;border-radius:50%;">`
+        : `<div style="font-size:60px;">🏪</div>`
+      }
+
+      <h1>${store.store_name}</h1>
+
+      <p>${store.description || "Welcome to our store."}</p>
+
+    </div>
+  `;
+
+  // Get seller products
+  const { data: sellerProducts, error } = await db
+    .from("products")
+    .select("*")
+    .eq("seller_id", sellerId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+    productBox.innerHTML = "<p>Could not load products.</p>";
+    return;
+  }
+
+  if (!sellerProducts.length) {
+    productBox.innerHTML = "<p>This store has no products yet.</p>";
+    return;
+  }<button onclick="openSellerStore('${product.seller_id}')">
+  🏪 Visit Store
+</button>async function saveSellerStore() {
+
+  const { data: { user } } = await db.auth.getUser();
+
+  if (!user) {
+    alert("Please login first.");
+    return;
+  }
+
+  const storeName =
+    document.getElementById("storeName").value.trim();
+
+  const description =
+    document.getElementById("storeDescription").value.trim();
+
+  if (!storeName) {
+    alert("Enter store name.");
+    return;
+  }
+
+  const { error } = await db
+    .from("seller_stores")
+    .upsert({
+      id: user.id,
+      store_name: storeName,
+      description: description
+    });
+
+  if (error) {
+    console.error(error);
+    alert("Could not save store.");
+    return;
+  }
+
+  alert("Store saved ✅");
+}
+
+  productBox.innerHTML = sellerProducts.map(product => `
+    <div class="product-card">
+
+      <img
+        src="${product.image || ""}"
+        alt="${product.name}"
+      >
+
+      <h3>${product.name}</h3>
+
+      <p>$${Number(product.price).toFixed(2)}</p>
+
+      <button onclick="openProduct(${product.id})">
+        👀 View Product
+      </button>
+
+    </div>
+  `).join("");
+}<button onclick="openSellerStore('${product.seller_id}')">
+  🏪 Visit Store
+</button>seller-logoscreate policy "Sellers can upload own logos"
+on storage.objects
+for insert
+to authenticated
+with check (
+  bucket_id = 'seller-logos'
+  and (storage.foldername(name))[1] = auth.uid()::text
+);
+
+create policy "Anyone can view seller logos"
+on storage.objects
+for select
+to public
+using (
+  bucket_id = 'seller-logos'
+);
+
+create policy "Sellers can update own logos"
+on storage.objects
+for update
+to authenticated
+using (
+  bucket_id = 'seller-logos'
+  and (storage.foldername(name))[1] = auth.uid()::text
+);<h2>⚙️ Store Settings</h2>
+
+<input
+  id="storeName"
+  placeholder="Store name"
+>
+
+<textarea
+  id="storeDescription"
+  placeholder="Store description"
+></textarea>
+
+<input
+  type="file"
+  id="storeLogo"
+  accept="image/*"
+>
+
+<button onclick="saveSellerStore()">
+  💾 Save Store
+</button>
+
+<div id="storeLogoPreview"></div>async function saveSellerStore() {
+
+  const { data: { user } } = await db.auth.getUser();
+
+  if (!user) {
+    alert("Please login first.");
+    return;
+  }
+
+  const storeName =
+    document.getElementById("storeName").value.trim();
+
+  const description =
+    document.getElementById("storeDescription").value.trim();
+
+  const logoFile =
+    document.getElementById("storeLogo").files[0];
+
+  if (!storeName) {
+    alert("Enter store name.");
+    return;
+  }
+
+  let logoUrl = null;
+
+  // Upload logo
+  if (logoFile) {
+
+    const extension =
+      logoFile.name.split(".").pop();
+
+    const filePath =
+      `${user.id}/${Date.now()}.${extension}`;
+
+    const { error: uploadError } =
+      await db.storage
+        .from("seller-logos")
+        .upload(filePath, logoFile);
+
+    if (uploadError) {
+      console.error(uploadError);
+      alert("Logo upload failed.");
+      return;
+    }
+
+    const { data } =
+      db.storage
+        .from("seller-logos")
+        .getPublicUrl(filePath);
+
+    logoUrl = data.publicUrl;
+  }
+
+  const storeData = {
+    id: user.id,
+    store_name: storeName,
+    description: description
+  };
+
+  if (logoUrl) {
+    storeData.logo_url = logoUrl;
+  }
+
+  const { error } = await db
+    .from("seller_stores")
+    .upsert(storeData);
+
+  if (error) {
+    console.error(error);
+    alert("Could not save store.");
+    return;
+  }
+
+  alert("Store saved successfully ✅");
+
+  if (logoUrl) {
+    document.getElementById("storeLogoPreview").innerHTML = `
+      <img
+        src="${logoUrl}"
+        style="
+          width:100px;
+          height:100px;
+          object-fit:cover;
+          border-radius:50%;
+          margin-top:10px;
+        "
+      >
+    `;
+  }
+}        🖼️
+   CARAFADIYA STORE
+   China Products
+
+   🛍️ Products
+   ⭐ Reviews
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carafadiya Mega Store</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #f4f6f9;
+      color: #333;
+    }
+
+    header {
+      background: #1a202c;
+      color: white;
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 600px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 20px;
+      border-radius: 50px;
+      border: none;
+      font-size: 16px;
+      outline: none;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+    }
+
+    .categories-bar {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      width: 100%;
+      max-width: 1200px;
+      padding: 10px 15px;
+      margin: 0 auto;
+      scrollbar-width: none;
+    }
+
+    .categories-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-btn {
+      background: white;
+      color: #1a202c;
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 1px solid #e2e8f0;
+      cursor: pointer;
+      white-space: nowrap;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .cat-btn.active, .cat-btn:hover {
+      background: #ff9900;
+      color: white;
+      border-color: #ff9900;
+    }
+
+    .main-container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 15px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    @media(min-width: 768px) {
+      .main-container {
+        grid-template-columns: 2fr 1fr;
+      }
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    @media(min-width: 992px) {
+      .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      background: #e2e8f0;
+    }
+
+    .product-info {
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .product-info h3 {
+      font-size: 16px;
+      margin-bottom: 8px;
+      height: 44px;
+      overflow: hidden;
+    }
+
+    .product-info .price {
+      color: #2b6cb0;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: auto;
+      margin-bottom: 12px;
+    }
+
+    .add-btn {
+      background: #ff9900;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .add-btn:hover {
+      background: #e68a00;
+    }
+
+    .cart-section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      align-self: start;
+      position: sticky;
+      top: 160px;
+    }
+
+    .cart-title {
+      border-bottom: 2px solid #f4f6f9;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #edf2f7;
+    }
+
+    .cart-item-details h4 {
+      font-size: 14px;
+    }
+
+    .cart-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .qty-btn {
+      background: #edf2f7;
+      border: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .remove-btn {
+      color: #e53e3e;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      margin-left: 10px;
+    }
+
+    .total-box {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 2px dashed #e2e8f0;
+      font-size: 18px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      background: #38a169;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+
+    .checkout-btn:hover {
+      background: #2f855a;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <h1>Carafadiya Mega Store 🛒</h1>
+      <div class="search-box">
+        <input type="text" id="search" placeholder="Raadi kumanaan alaabo ah..." onkeyup="filterProducts()">
+      </div>
+    </div>
+  </header>
+
+  <div class="categories-bar" id="categoriesBox">
+    <button class="cat-btn active" onclick="filterCategory('All', this)">Dhammaan</button>
+    <button class="cat-btn" onclick="filterCategory('Electronics', this)">Electonics</button>
+    <button class="cat-btn" onclick="filterCategory('Dharka', this)">Dharka & Kabaha</button>
+    <button class="cat-btn" onclick="filterCategory('Cadarka', this)">Cadarrada</button>
+    <button class="cat-btn" onclick="filterCategory('Agabka Guriga', this)">Agabka Guriga</button>
+  </div>
+
+  <div class="main-container">
+    <div class="products-grid" id="productsDisplay">
+      <!-- Alaabta waxay si automatic ah uga soo baxaysaa JavaScript -->
+    </div>
+
+    <div class="cart-section">
+      <div class="cart-title">
+        <h3>Kallatiga (Cart)</h3>
+        <span id="cartCount">0 alaab</span>
+      </div>
+      <div id="cartItems">Kallatigu waa maran yahay.</div>
+      <div class="total-box">
+        <span>Wadarta Guud:</span>
+        <span id="totalPrice">$0.00</span>
+      </div>
+      <button class="checkout-btn" onclick="checkoutWhatsApp()">Ku Dalbo WhatsApp</button>
+    </div>
+  </div>
+
+  <script>
+    // 1. Database-ka Alaabta (Halkan waxaad ku dari kartaa kumanaan alaabo ah)
+    const database = [
+      { id: 1, name: "iPhone 15 Pro Max", price: 1200, category: "Electronics", img: "https://unsplash.com" },
+      { id: 2, name: "Saacad Casri ah (Smart Watch)", price: 45, category: "Electronics", img: "https://unsplash.com" },
+      { id: 3, name: "Kabaha Orodka (Sneakers)", price: 35, category: "Dharka", img: "https://unsplash.com" },
+      { id: 4, name: "Cadarka Oud Intense", price: 65, category: "Cadarka", img: "https://unsplash.com" },
+      { id: 5, name: "Blender (Mashiinka Soya)", price: 50, category: "Agabka Guriga", img: "https://unsplash.com" },
+      { id: 6, name: "Samoofal Wireless Headphone", price: 80, category: "Electronics", img: "https://unsplash.com" },
+      { id: 7, name: "Shaati Ragga (Casual Shirt)", price: 22, category: "Dharka", img: "https://unsplash.com" },
+      { id: 8, name: "Cadarka Rose Scent", price: 40, category: "Cadarka", img: "https://unsplash.com" }
+    ];
+
+    // Loop garee si aad u abuurto "Kumanaan" alaabo oo tijaabo ah si automatic ah
+    for (let i = 9; i <= 200; i++) {
+      database.push({
+        id: i,
+        name: `Alaabta Tijaabada ah Lambar ${i}`,
+        price: Math.floor(Math.random() * 100) + 10,
+        category: i % 2 === 0 ? "Electronics" : "Dharka",
+        img: "https://placeholder.com"
+      });
+    }
+
+    let cart = [];
+    let currentCategory = "All";
+
+    // 2. Soo bandhigista Alaabta
+    function displayProducts(products) {
+      const display = document.getElementById("productsDisplay");
+      if (products.length === 0) {
+        display.innerHTML = "<p style='grid-column: span 3; text-align:center; padding:20px;'>Wax alaab ah lama helin.</p>";
+        return;
+      }
+      display.innerHTML = products.map(product => `
+        <div class="product-card">
+          <img src="${product.img}" alt="${product.name}">
+          <div class="product-info">
+            <h3>${product.name}</h3>
+            <p class="price">$${product.price}</p>
+            <button class="add-btn" onclick="addToCart(${product.id})">Ku Dar Kallatiga</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // 3. Qaybta Raadinta (Search)
+    function filterProducts() {
+      const searchValue = document.getElementById("search").value.toLowerCase();
+      const filtered = database.filter(p => {
+        const matchesSearch = p.name.toLowerCase().includes(searchValue);
+        const matchesCategory = currentCategory === "All" || p.category === currentCategory;
+        return matchesSearch && matchesCategory;
+      });
+      displayProducts(filtered);
+    }
+
+    // 4. Qaybta Kala Saarista Noocyada (Category)
+    function filterCategory(category, button) {
+      currentCategory = category;
+      document.querySelectorAll(".cat-btn").forEach(btn => btn.classList.remove("active"));
+      button.classList.add("active");
+      filterProducts();
+    }
+
+    // 5. Maareynta Kallatiga (Cart Functions)
+    function addToCart(id) {
+      const product = database.find(p => p.id === id);
+      const cartItem = cart.find(item => item.id === id);
+
+      if (cartItem) {<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carafadiya Mega Store</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #f4f6f9;
+      color: #333;
+    }
+
+    header {
+      background: #1a202c;
+      color: white;
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 600px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 20px;
+      border-radius: 50px;
+      border: none;
+      font-size: 16px;
+      outline: none;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+    }
+
+    .categories-bar {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      width: 100%;
+      max-width: 1200px;
+      padding: 10px 15px;
+      margin: 0 auto;
+      scrollbar-width: none;
+    }
+
+    .categories-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-btn {
+      background: white;
+      color: #1a202c;
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 1px solid #e2e8f0;
+      cursor: pointer;
+      white-space: nowrap;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .cat-btn.active, .cat-btn:hover {
+      background: #ff9900;
+      color: white;
+      border-color: #ff9900;
+    }
+
+    .main-container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 15px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    @media(min-width: 768px) {
+      .main-container {
+        grid-template-columns: 2fr 1fr;
+      }
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    @media(min-width: 992px) {
+      .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      background: #e2e8f0;
+    }
+
+    .product-info {
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .product-info h3 {
+      font-size: 16px;
+      margin-bottom: 8px;
+      height: 44px;
+      overflow: hidden;
+    }
+
+    .product-info .price {
+      color: #2b6cb0;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: auto;
+      margin-bottom: 12px;
+    }
+
+    .add-btn {
+      background: #ff9900;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .add-btn:hover {
+      background: #e68a00;
+    }
+
+    .cart-section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      align-self: start;
+      position: sticky;
+      top: 160px;
+    }
+
+    .cart-title {
+      border-bottom: 2px solid #f4f6f9;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #edf2f7;
+    }
+
+    .cart-item-details h4 {
+      font-size: 14px;
+    }
+
+    .cart-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .qty-btn {
+      background: #edf2f7;
+      border: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .remove-btn {
+      color: #e53e3e;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      margin-left: 10px;
+    }
+
+    .total-box {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 2px dashed #e2e8f0;
+      font-size: 18px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      background: #38a169;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+
+    .checkout-btn:hover {
+      background: #2f855a;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <h1>Carafadiya Mega Store 🛒</h1>
+      <div class="search-box">
+        <input type="text" id="search" placeholder="Raadi kumanaan alaabo ah..." onkeyup="filterProducts()">
+      </div>
+    </div>
+  </header>
+
+  <div class="categories-bar" id="categoriesBox">
+    <button class="cat-btn active" onclick="filterCategory('All', this)">Dhammaan</button>
+    <button class="cat-btn" onclick="filterCategory('Electronics', this)">Electonics</button>
+    <button class="cat-btn" onclick="filterCategory('Dharka', this)">Dharka & Kabaha</button>
+    <button class="cat-btn" onclick="filterCategory('Cadarka', this)">Cadarrada</button>
+    <button class="cat-btn" onclick="filterCategory('Agabka Guriga', this)">Agabka Guriga</button>
+  </div>
+
+  <div class="main-container">
+    <div class="products-grid" id="productsDisplay">
+      <!-- Alaabta waxay si automatic ah uga soo baxaysaa JavaScript -->
+    </div>
+
+    <div class="cart-section">
+      <div class="cart-title">
+        <h3>Kallatiga (Cart)</h3>
+        <span id="cartCount">0 alaab</span>
+      </div>
+      <div id="cartItems">Kallatigu waa maran yahay.</div>
+      <div class="total-box">
+        <span>Wadarta Guud:</span>
+        <span id="totalPrice">$0.00</span>
+      </div>
+      <button class="checkout-btn" onclick="checkoutWhatsApp()">Ku Dalbo WhatsApp</button>
+    </div>
+  </div>
+
+  <script>
+    // 1. Database-ka Alaabta (Halkan waxaad ku dari kartaa kumanaan alaabo ah)
+    const database = [
+      { id: 1, name: "iPhone 15 Pro Max", price: 1200, category: "Electronics", img: "https://unsplash.com" },
+      { id: 2, name: "Saacad Casri ah (Smart Watch)", price: 45, category: "Electronics", img: "https://unsplash.com" },
+      { id: 3, name: "Kabaha Orodka (Sneakers)", price: 35, category: "Dharka", img: "https://unsplash.com" },
+      { id: 4, name: "Cadarka Oud Intense", price: 65, category: "Cadarka", img: "https://unsplash.com" },
+      { id: 5, name: "Blender (Mashiinka Soya)", price: 50, category: "Agabka Guriga", img: "https://unsplash.com" },
+      { id: 6, name: "Samoofal Wireless Headphone", price: 80, category: "Electronics", img: "https://unsplash.com" },
+      { id: 7, name: "Shaati Ragga (Casual Shirt)", price: 22, category: "Dharka", img: "https://unsplash.com" },
+      { id: 8, name: "Cadarka Rose Scent", price: 40, category: "Cadarka", img: "https://unsplash.com" }
+    ];
+
+    // Loop garee si aad u abuurto "Kumanaan" alaabo oo tijaabo ah si automatic ah
+    for (let i = 9; i <= 200; i++) {
+      database.push({
+        id: i,
+        name: `Alaabta Tijaabada ah Lambar ${i}`,
+        price: Math.floor(Math.random() * 100) + 10,
+        category: i % 2 === 0 ? "Electronics" : "Dharka",
+        img: "https://placeholder.com"
+      });
+    }
+
+    let cart = [];
+    let currentCategory = "All";
+
+    // 2. Soo bandhigista Alaabta
+    function displayProducts(products) {
+      const display = document.getElementById("productsDisplay");
+      if (products.length === 0) {
+        display.innerHTML = "<p style='grid-column: span 3; text-align:center; padding:20px;'>Wax alaab ah lama helin.</p>";
+        return;
+      }
+      display.innerHTML = products.map(product => `
+        <div class="product-card">
+          <img src="${product.img}" alt="${product.name}">
+          <div class="product-info">
+            <h3>${product.name}</h3>
+            <p class="price">$${product.price}</p>
+            <button class="add-btn" onclick="addToCart(${product.id})">Ku Dar Kallatiga</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // 3. Qaybta Raadinta (Search)
+    function filterProducts() {
+      const searchValue = document.getElementById("search").value.toLowerCase();
+      const filtered = database.filter(p => {
+        const matchesSearch = p.name.toLowerCase().includes(searchValue);
+        const matchesCategory = currentCategory === "All" || p.category === currentCategory;
+        return matchesSearch && matchesCategory;
+      });
+      displayProducts(filtered);
+    }
+
+    // 4. Qaybta Kala Saarista Noocyada (Category)
+    function filterCategory(category, button) {
+      currentCategory = category;
+      document.querySelectorAll(".cat-btn").forEach(btn => btn.classList.remove("active"));
+      button.classList.add("active");
+      filterProducts();
+    }
+
+    // 5. Maareynta Kallatiga (Cart Functions)
+    function addToCart(id) {
+      const product = database.find(p => p.id === id);
+      const cartItem = cart.find(item => item.id === id);
+
+      if (cartItem) {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carafadiya Mega Store</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #f4f6f9;
+      color: #333;
+    }
+
+    header {
+      background: #1a202c;
+      color: white;
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 600px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 20px;
+      border-radius: 50px;
+      border: none;
+      font-size: 16px;
+      outline: none;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+    }
+
+    .categories-bar {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      width: 100%;
+      max-width: 1200px;
+      padding: 10px 15px;
+      margin: 0 auto;
+      scrollbar-width: none;
+    }
+
+    .categories-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-btn {
+      background: white;
+      color: #1a202c;
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 1px solid #e2e8f0;
+      cursor: pointer;
+      white-space: nowrap;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .cat-btn.active, .cat-btn:hover {
+      background: #ff9900;
+      color: white;
+      border-color: #ff9900;
+    }
+
+    .main-container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 15px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    @media(min-width: 768px) {
+      .main-container {
+        grid-template-columns: 2fr 1fr;
+      }
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    @media(min-width: 992px) {
+      .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      background: #e2e8f0;
+    }
+
+    .product-info {
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .product-info h3 {
+      font-size: 16px;
+      margin-bottom: 8px;
+      height: 44px;
+      overflow: hidden;
+    }
+
+    .product-info .price {
+      color: #2b6cb0;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: auto;
+      margin-bottom: 12px;
+    }
+
+    .add-btn {
+      background: #ff9900;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .add-btn:hover {
+      background: #e68a00;
+    }
+
+    .cart-section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      align-self: start;
+      position: sticky;
+      top: 160px;
+    }
+
+    .cart-title {
+      border-bottom: 2px solid #f4f6f9;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #edf2f7;
+    }
+
+    .cart-item-details h4 {
+      font-size: 14px;
+    }
+
+    .cart-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .qty-btn {
+      background: #edf2f7;
+      border: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .remove-btn {
+      color: #e53e3e;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      margin-left: 10px;
+    }
+
+    .total-box {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 2px dashed #e2e8f0;
+      font-size: 18px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      background: #38a169;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+
+    .checkout-btn:hover {
+      background: #2f855a;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <h1>Carafadiya Mega Store 🛒</h1>
+      <div class="search-box">
+        <input type="text" id="search" placeholder="Raadi kumanaan alaabo ah..." onkeyup="filterProducts()">
+      </div>
+    </div>
+  </header>
+
+  <div class="categories-bar" id="categoriesBox">
+    <button class="cat-btn active" onclick="filterCategory('All', this)">Dhammaan</button>
+    <button class="cat-btn" onclick="filterCategory('Electronics', this)">Electronics</button>
+    <button class="cat-btn" onclick="filterCategory('Dharka', this)">Dharka & Kabaha</button>
+    <button class="cat-btn" onclick="filterCategory('Cadarka', this)">Cadarrada</button>
+    <button class="cat-btn" onclick="filterCategory('Agabka Guriga', this)">Agabka Guriga</button>
+  </div>
+
+  <div class="main-container">
+    <div class="products-grid" id="productsDisplay">
+      <!-- Products dynamically loaded by JavaScript -->
+    </div>
+
+    <div class="cart-section">
+      <div class="cart-title">
+        <h3>Kallatiga (Cart)</h3>
+        <span id="cartCount">0 alaab</span>
+      </div>
+      <div id="cartItems">Kallatigu waa maran yahay.</div>
+      <div class="total-box">
+        <span>Wadarta Guud:</span>
+        <span id="totalPrice">$0.00</span>
+      </div>
+      <button class="checkout-btn" onclick="checkoutWhatsApp()">Ku Dalbo WhatsApp</button>
+    </div>
+  </div>
+
+  <script>
+    // 1. Initial Sample Database Inventory
+    const database = [
+      { id: 1, name: "iPhone 15 Pro Max", price: 1200, category: "Electronics", img: "https://unsplash.com" },
+      { id: 2, name: "Saacad Casri ah (Smart Watch)", price: 45, category: "Electronics", img: "https://unsplash.com" },
+      { id: 3, name: "Kabaha Orodka (Sneakers)", price: 35, category: "Dharka", img: "https://unsplash.com" },
+      { id: 4, name: "Cadarka Oud Intense", price: 65, category: "Cadarka", img: "https://unsplash.com" },
+      { id: 5, name: "Blender (Mashiinka Soya)", price: 50, category: "Agabka Guriga", img: "https://unsplash.com" },
+      { id: 6, name: "Samoofal Wireless Headphone", price: 80, category: "Electronics", img: "https://unsplash.com" },
+      { id: 7, name: "Shaati Ragga (Casual Shirt)", price: 22, category: "Dharka", img: "https://unsplash.com" },
+      { id: 8, name: "Cadarka Rose Scent", price: 40, category: "Cadarka", img: "https://unsplash.com" }
+    ];
+
+    // Automating thousands of test products dynamically inside the user device
+    for (let i = 9; i <= 200; i++) {
+      database.push({
+        id: i,
+        name: `Alaabta Tijaabada ah Lambar ${i}`,
+        price: Math.floor(Math.random() * 100) + 10,
+        category: i % 2 === 0 ? "Electronics" : "Dharka",
+        img: "https://placeholder.com"
+      });
+    }
+
+    let cart = [];
+    let currentCategory = "All";
+
+    // 2. Render UI Inventory Items
+    function displayProducts(products) {
+      const display = document.getElementById("productsDisplay");
+      if (products.length === 0) {
+        display.innerHTML = "<p style='grid-column: span 3; text-align:center; padding:20px;'>Wax alaab ah lama helin.</p>";
+        return;
+      }
+      display.innerHTML = products.map(product => `
+        <div class="product-card">
+          <img src="${product.img}" alt="${product.name}">
+          <div class="product-info">
+            <h3>${product.name}</h3>
+            <p class="price">$${product.price}</p>
+            <button class="add-btn" onclick="addToCart(${product.id})">Ku Dar Kallatiga</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // 3. Ultra-fast Search Engine Filter
+    function filterProducts() {
+      const searchValue = document.getElementById("search").value.toLowerCase();
+      const filtered = database.filter(p => {
+        const matchesSearch = p.name.toLowerCase().includes(searchValue);
+        const matchesCategory = currentCategory === "All" || p.category === currentCategory;
+        return matchesSearch && matchesCategory;
+      });
+      displayProducts(filtered);
+    }
+
+    // 4. Category Routing
+    function filterCategory(category, button) {
+      currentCategory = category;
+      document.querySelectorAll(".cat-btn").forEach(btn => btn.classList.remove("active"));
+      button.classList.add("active");
+      filterProducts();
+    }
+
+    // 5. Intelligent Cart Logic
+    function addToCart(id) {
+      const product = database.find(p => p.id === id);
+      const cartItem = cart.find(item => item.id === id);
+
+      if (cartItem) {
+        cartItem.qty++;
+      } else {
+        cart.push({ ...product, qty: 1 });
+      }
+
+html<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carafadiya Mega Store</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #f4f6f9;
+      color: #333;
+    }
+
+    header {
+      background: #1a202c;
+      color: white;
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 600px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 20px;
+      border-radius: 50px;
+      border: none;
+      font-size: 16px;
+      outline: none;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+    }
+
+    .categories-bar {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      width: 100%;
+      max-width: 1200px;
+      padding: 10px 15px;
+      margin: 0 auto;
+      scrollbar-width: none;
+    }
+
+    .categories-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-btn {
+      background: white;
+      color: #1a202c;
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 1px solid #e2e8f0;
+      cursor: pointer;
+      white-space: nowrap;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .cat-btn.active, .cat-btn:hover {
+      background: #ff9900;
+      color: white;
+      border-color: #ff9900;
+    }
+
+    .main-container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 15px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    @media(min-width: 768px) {
+      .main-container {
+        grid-template-columns: 2fr 1fr;
+      }
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    @media(min-width: 992px) {
+      .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      background: #e2e8f0;
+    }
+
+    .product-info {
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .product-info h3 {
+      font-size: 16px;
+      margin-bottom: 8px;
+      height: 44px;
+      overflow: hidden;
+    }
+
+    .product-info .price {
+      color: #2b6cb0;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: auto;
+      margin-bottom: 12px;
+    }
+
+    .add-btn {
+      background: #ff9900;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .add-btn:hover {
+      background: #e68a00;
+    }
+
+    .cart-section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      align-self: start;
+      position: sticky;
+      top: 160px;
+    }
+
+    .cart-title {
+      border-bottom: 2px solid #f4f6f9;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #edf2f7;
+    }
+
+    .cart-item-details h4 {
+      font-size: 14px;
+    }
+
+    .cart-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .qty-btn {
+      background: #edf2f7;
+      border: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .remove-btn {
+      color: #e53e3e;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      margin-left: 10px;
+    }
+
+    .total-box {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 2px dashed #e2e8f0;
+      font-size: 18px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      background: #38a169;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+
+    .checkout-btn:hover {
+      background: #2f855a;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <h1>Carafadiya Mega Store 🛒</h1>
+      <div class="search-box">
+        <input type="text" id="search" placeholder="Raadi kabaha, dharka, buskullada..." onkeyup="filterProducts()">
+      </div>
+    </div>
+  </header>
+
+  <div class="categories-bar" id="categoriesBox">
+    <button class="cat-btn active" onclick="filterCategory('All', this)">Dhammaan</button>
+    <button class="cat-btn" onclick="filterCategory('Kabo', this)">Kabo (Shoes)</button>
+    <button class="cat-btn" onclick="filterCategory('Barbour', this)">Dharka Barbour</button>
+    <button class="cat-btn" onclick="filterCategory('Buskullo', this)">Buskullo (Bicycles)</button>
+    <button class="cat-btn" onclick="filterCategory('Qalab', this)">Qalab (Hardware)</button>
+  </div>
+
+  <div class="main-container">
+    <div class="products-grid" id="productsDisplay">
+      <!-- Dynamically filled by JS database logic -->
+    </div>
+
+    <div class="cart-section">
+      <div class="cart-title">
+        <h3>Kallatiga (Cart)</h3>
+        <span id="cartCount">0 alaab</span>
+      </div>
+      <div id="cartItems">Kallatigu waa maran yahay.</div>
+      <div class="total-box">
+        <span>Wadarta Guud:</span>
+        <span id="totalPrice">$0.00</span>
+      </div>
+      <button class="checkout-btn" onclick="checkoutWhatsApp()">Ku Dalbo WhatsApp</button>
+    </div>
+  </div>
+
+  <script>
+    // 1. Customized Inventory Categories: Kabo, Barbour (Dharka), Buskullo, Qalab
+    const database = [
+      { id: 1, name: "Kabaha Sportiga Casriga ah", price: 35, category: "Kabo", img: "https://unsplash.com" },
+      { id: 2, name: "Barbour Waxed Waterproof Jacket", price: 150, category: "Barbour", img: "https://unsplash.com" },
+      { id: 3, name: "Buskul Mountain Bike 26-Inch", price: 180, category: "Buskullo", img: "https://unsplash.com" },
+      { id: 4, name: "Qalabka Gacan-ku-shaqaynta (Tool Set)", price: 45, category: "Qalab", img: "https://unsplash.com" },
+      { id: 5, name: "Kabaha Maqaarka Classic (Loafers)", price: 55, category: "Kabo", img: "https://unsplash.com" },
+      { id: 6, name: "Barbour Quilted Winter Coat", price: 120, category: "Barbour", img: "https://unsplash.com" },
+      { id: 7, name: "Silsilad Buskuul (Bicycle Chain Parts)", price: 15, category: "Buskullo", img: "https://unsplash.com" },
+      { id: 8, name: "Mashiinka Dalbaca (Electric Drill)", price: 60, category: "Qalab", img: "https://unsplash.com" }
+    ];
+
+    // Populating thousands of mock items categorized seamlessly for testing scaling bounds
+    const cats = ["Kabo", "Barbour", "Buskullo", "Qalab"];
+    for (let i = 9; i <= 150; i++) {
+      let chosenCat = cats[i % cats.length];
+      database.push({
+        id: i,
+        name: `${chosenCat} Premium Batch Line #${i}`,
+        price: Math.floor(Math.random() * 90) + 15,
+        category: chosenCat,
+        img: "https://placeholder.com"
+      });
+    }
+
+    let cart = [];
+    let currentCategory = "All";
+
+    // 2. Render Loop Control
+    function displayProducts(products) {
+      const display = document.getElementById("productsDisplay");
+      if (products.length === 0) {
+        display.innerHTML = "<p style='grid-column: span 3; text-align:center; padding:20px;'>Alaab noocaan ah lama helin.</p>";
+        return;
+      }
+      display.innerHTML = products.map(product => `
+        <div class="product-card">
+          <img src="${product.img}" alt="${product.name}">
+          <div class="product-info">
+            <h3>${product.name}</h3>
+            <p class="price">$${product.price}</p>
+            <button class="add-btn" onclick="addToCart(${product.id})">Ku Dar Kallatiga</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // 3. Dynamic Filter Search Logic
+    function filterProducts() {
+      const searchValue = document.getElementById("search").value.toLowerCase();
+      const filtered = database.filter(p => {
+        const matchesSearch = p.name.toLowerCase().includes(searchValue);
+        const matchesCategory = currentCategory === "All" || p.category === currentCategory;
+        return matchesSearch && matchesCategory;
+      });
+      displayProducts(filtered);
+    }
+
+    // 4. Tab Category Navigation Routing
+    function filterCategory(category, button) {
+      currentCategory = category;
+      document.querySelectorAll(".cat-btn").forEach(btn => btn.classList.remove("active"));
+      button.classList.add("active");
+      filterProducts();
+    }
+
+    // 5. Shopping Cart State Adjustments
+    function addToCart(id) {
+Use code with caution.const product = database.find(p => p.id === id);const cartItem = cart.find(item => item.id === id);if (cartItem) {cartItem.qty++;} else {cart.push({ ...product, qty: 1 });}updateCart();}function changeQty(id, amount) {const cartItem = cart.find(item => item.id === id);if (cartItem) {cartItem.qty += amount;if (cartItem.qty <= 0) {cart = cart.filter(item => item.id !== id);}}updateCart();}function removeItem(id) {cart = cart.filter(item => item.id !== id);updateCart();}function updateCart() {const cartItemsElement = document.getElementById("cartItems");const cartCountElement = document.getElementById("cartCount");const totalPriceElement = document.getElementById("totalPrice");if (cart.length === 0) {cartItemsElement.innerHTML = "Kallatigu waa maran yahay.";cartCountElement.innerText = "0 alaab";totalPriceElement.innerText = "$0.00";return;}cartItemsElement.innerHTML = cart.map(item => <div class="cart-item"> <div class="cart-item-details"> <h4>${item.name}</h4> <small>$${item.price} x ${item.qty}</small> </div> <div class="cart-item-actions"> <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button> <span>${item.qty}</span> <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button> <button class="remove-btn" onclick="removeItem(${item.id})">❌</button> </div> </div>).join("");const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);const totalCost = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);cartCountElement.innerText = ${totalItems} alaab;totalPriceElement.innerText = $${totalCost.toFixed(2)};}// 6. Secure Formatted Messaging Gateway payload payloadfunction checkoutWhatsApp() {if (cart.length === 0) {alert("Kallatigaagu waa maran yahay! Fadlan horta alaab dooro.");return;}let number = "252905887425";let text = "Asc Carafadiya Mega Store,\nWaxaan rabaa inaan dalbado agabkaan soo socda:\n\n";cart.forEach((item, index) => {text += ${index + 1}. ${item.name} [Nooca: ${item.category}] (Tirada: ${item.qty}) - $${item.price * item.qty}\n;});const totalCost = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);text += \n*Wadarta Guud ee Lacagta: $${totalCost}*;let url = https://wa.me{number}?text=${encodeURIComponent(text)};window.open(url, "_blank");}// Initialize execution rendering index arraysdisplayProducts(database);
+<FollowUp>
+Would you like help with either of the following next steps?
+* Adding a **delivery address input form field** so clients can supply their location details directly inside the WhatsApp order message.
+* Replacing the placeholder image links (`unsplash.com` and `://placeholder.com`) with a step-by-step method to load your **own real stock photos**.
+</FollowUp><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carafadiya Premium Mega Store</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: #f8fafc;
+      color: #0f172a;
+    }
+
+    /* Luxury Interactive Header */
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      padding: 25px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      border-bottom: 2px solid #ff9900;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 14px 24px;
+      border-radius: 50px;
+      border: 2px solid transparent;
+      font-size: 16px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .search-box input:focus {
+      border-color: #ff9900;
+      box-shadow: 0 0 15px rgba(255, 153, 0, 0.4);
+    }
+
+    /* Premium Horizontal Scroll Categories */
+    .categories-bar {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      max-width: 1200px;
+      padding: 20px 15px;
+      margin: 0 auto;
+      scrollbar-width: none;
+    }
+
+    .categories-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-btn {
+      background: white;
+      color: #334155;
+      padding: 10px 22px;
+      border-radius: 50px;
+      border: 1px solid #e2e8f0;
+      cursor: pointer;
+      white-space: nowrap;
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .cat-btn.active, .cat-btn:hover {
+      background: #ff9900;
+      color: white;
+      border-color: #ff9900;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 153, 0, 0.3);
+    }
+
+    /* Responsive Main Framework Grid Layout */
+    .main-container {
+      max-width: 1200px;
+      margin: 10px auto 50px auto;
+      padding: 0 15px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    @media(min-width: 768px) {
+      .main-container {
+        grid-template-columns: 2.2fr 1fr;
+      }
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    @media(min-width: 992px) {
+      .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* Glassmorphism Product Card Design Elements */
+    .product-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+      border: 1px solid #f1f5f9;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 15px 30px rgba(15, 23, 42, 0.1);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: #f1f5f9;
+      transition: transform 0.5s ease;
+    }
+
+    .product-card:hover img {
+      transform: scale(1.04);
+    }
+
+    .badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(15, 23, 42, 0.85);
+      color: white;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 50px;
+      backdrop-filter: blur(4px);
+      z-index: 10;
+    }
+
+    .product-info {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .product-info h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 8px;
+      height: 44px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .product-info .price {
+      color: #2563eb;
+      font-size: 20px;
+      font-weight: 700;
+      margin-top: auto;
+      margin-bottom: 14px;
+    }
+
+    .add-btn {
+      background: linear-gradient(135deg, #ff9900 0%, #ed8936 100%);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(237, 137, 54, 0.2);
+      transition: all 0.2s ease;
+    }
+
+    .add-btn:hover {
+      filter: brightness(1.05);
+      box-shadow: 0 6px 15px rgba(237, 137, 54, 0.3);
+    }
+
+    /* Right Sticky Checkout Sidebar Pane */
+    .cart-section {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      align-self: start;
+      position: sticky;
+      top: 150px;
+    }
+
+    .cart-title {
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-title h3 {
+      font-weight: 700;
+    }
+
+    #cartCount {
+      background: #f1f5f9;
+      color: #475569;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .cart-item-details h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .cart-item-details small {
+      color: #64748b;
+    }
+
+    .cart-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .qty-btn {
+      background: #f1f5f9;
+      border: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #475569;
+      transition: background 0.2s;
+    }
+
+    .qty-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .remove-btn {
+      color: #ef4444;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      margin-left: 5px;
+    }
+
+    /* Embedded Delivery Address Form Module */
+    .delivery-form {
+      margin-top: 20px;
+      background: #f8fafc;
+      padding: 15px;
+      border-radius: 12px;
+      border: 1px dashed #cbd5e1;
+    }
+
+    .delivery-form h4 {
+      font-size: 14px;
+      margin-bottom: 10px;
+      color: #475569;
+    }
+
+    .delivery-form input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .delivery-form input:focus {
+      border-color: #2563eb;
+    }
+
+    .total-box {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 2px dashed #cbd5e1;
+      font-size: 19px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 15px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+      transition: all 0.2s;
+    }
+
+    .checkout-btn:hover {
+      filter: brightness(1.05);
+      box-shadow: 0 6px 18px rgba(34, 197, 94, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <h1>Carafadiya Premium Store 🛒</h1>
+      <div class="search-box">
+        <input type="text" id="search" placeholder="Raadi agabka dukaanka oo dhan..." onkeyup="filterProducts()">
+      </div>
+    </div>
+  </header>
+
+  <div class="categories-bar" id="categoriesBox">
+    <button class="cat-btn active" onclick="filterCategory('All', this)">Dhammaan</button>
+    <button class="cat-btn" onclick="filterCategory('Kabo', this)">Kabo (Shoes)</button>
+    <button class="cat-btn" onclick="filterCategory('Barbour', this)">Dharka Barbour</button>
+    <button class="cat-btn" onclick="filterCategory('Buskullo', this)">Buskullo (Bicycles)</button>
+    <button class="cat-btn" onclick="filterCategory('Qalab', this)">Qalab (Hardware)</button>
+    <button class="cat-btn" onclick="filterCategory('Quruxda', this)">Quruxda & Cosmetics</button>
+    <button class="cat-btn" onclick="filterCategory('Baabuurta', this)">Agabka Baabuurta</button>
+  </div>
+
+  <div class="main-container">
+    <div class="products-grid" id="productsDisplay">
+      <!-- Injected securely via real-time runtime JS arrays -->
+    </div>
+
+    <div class="cart-section">
+      <div class="cart-title">
+        <h3>Kallatiga (Cart)</h3>
+        <span id="cartCount">0 alaab</span>
+      </div>
+      
+      <div id="cartItems">Kallatigu waa maran yahay.</div>
+      
+      <!-- Delivery Destination Inputs -->
+      <div class="delivery-form">
+        <h4>Goobta lagugu keenayo (Delivery Info):</h4>
+        <input type="text" id="addressInput" placeholder="Tusaale: Degmada, Xaafada & Guriga...">
+      </div>
+
+      <div class="total-box">
+        <span>Wadarta Guud:</span>
+        <span id="totalPrice">$0.00</span>
+      </div>
+      <button class="checkout-btn" onclick="checkoutWhatsApp()">Ku Dalbo WhatsApp</button>
+    </div>
+  </div>
+
+  <script>
+    // 1. Production Core Catalog Arrays
+    const database = [
